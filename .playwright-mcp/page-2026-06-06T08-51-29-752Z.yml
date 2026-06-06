@@ -1,0 +1,485 @@
+- generic [ref=e1]:
+  - link "Skip to listings" [ref=e2] [cursor=pointer]:
+    - /url: "#browse"
+  - banner [ref=e3]:
+    - generic [ref=e11]:
+      - link "EverestBazar — home" [ref=e12] [cursor=pointer]:
+        - /url: "#top"
+        - img [ref=e13]
+        - generic [ref=e16]: EverestBazar
+      - navigation [ref=e17]:
+        - link "किनमेल" [ref=e648] [cursor=pointer]:
+          - /url: "#browse"
+        - link "कसरी काम गर्छ" [ref=e649] [cursor=pointer]:
+          - /url: "#how"
+        - link "बेच्नुहोस्" [ref=e650] [cursor=pointer]:
+          - /url: "#sell"
+        - link "सुरक्षा" [ref=e651] [cursor=pointer]:
+          - /url: "#how"
+      - generic [ref=e22]:
+        - group "Language" [ref=e23]:
+          - button "EN" [ref=e24] [cursor=pointer]
+          - button "ने" [active] [pressed] [ref=e25] [cursor=pointer]
+        - link "सामान हेर्नुहोस्" [ref=e652] [cursor=pointer]:
+          - /url: "#browse"
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - img [ref=e30]
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]: नेपालको पहिलो भरोसायोग्य पुरानो-सामान बजार
+          - heading "पुरानो सामान। ठगी शून्य।" [level=1] [ref=e653]:
+            - generic [ref=e40]: पुरानो सामान।
+            - generic [ref=e41]: ठगी शून्य।
+          - paragraph [ref=e42]: हरेक बिक्रेता राष्ट्रिय परिचयपत्रबाट प्रमाणित हुन्छन्। हरेक भुक्तानी तपाईंले सामान पाएको पुष्टि नगरेसम्म एस्क्रोमा सुरक्षित राखिन्छ।
+          - generic [ref=e43]:
+            - link "सामान हेर्नुहोस्" [ref=e654] [cursor=pointer]:
+              - /url: "#browse"
+              - text: सामान हेर्नुहोस्
+              - img [ref=e45]
+            - link "बिक्रेता बन्नुहोस्" [ref=e655] [cursor=pointer]:
+              - /url: "#sell"
+          - paragraph [ref=e48]: एभरेस्ट — प्रकृतिको सर्वोच्च मापदण्ड। एभरेस्टबजार — व्यापारको।
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - img [ref=e53]
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - text: एस्क्रो सुरक्षित
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - strong [ref=e66]: आइफोन १३ · १२८जीबी
+              - generic [ref=e67]: रु 78,000
+            - generic [ref=e69]: बानेश्वर, काठमाडौं
+            - generic [ref=e70]:
+              - generic [ref=e71]: आ
+              - generic [ref=e72]:
+                - img [ref=e73]
+                - text: प्रमाणित बिक्रेता
+              - generic [ref=e75]:
+                - img [ref=e76]
+                - text: "4.9"
+    - generic [ref=e78]:
+      - img [ref=e80]
+      - generic [ref=e82]:
+        - generic [ref=e84]: ०×
+        - generic [ref=e85]:
+          - paragraph [ref=e86]: नेपालमा अनलाइन ठगीका उजुरीहरू बढेका छन् पाँच वर्षमा.
+          - paragraph [ref=e87]: फेसबुकमा अपरिचितलाई पैसा पठाउनु जुवा हुनुहुँदैन।
+          - paragraph [ref=e88]:
+            - img [ref=e90]
+            - text: हामीले एभरेस्टबजार बनायौं ताकि त्यो संख्यामा तपाईं कहिल्यै नपर्नुहोस्।
+    - generic [ref=e94]:
+      - generic [ref=e95]:
+        - generic [ref=e96]: हामी किन फरक छौं
+        - heading "नेपालले एउटै बजारमा कहिल्यै नपाएका तीन कुरा।" [level=2] [ref=e656]
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - img [ref=e101]
+          - generic [ref=e105]: "01"
+          - heading "प्रमाणित बिक्रेता" [level=3] [ref=e657]
+          - paragraph [ref=e107]: कसैले सामान राख्नुअघि हामी राष्ट्रिय परिचयपत्रबाट जाँच गर्छौं। वास्तविक मानिस, वास्तविक जवाफदेहिता — अज्ञात खाता होइन।
+        - generic [ref=e108]:
+          - img [ref=e110]
+          - generic [ref=e113]: "02"
+          - heading "एस्क्रो-सुरक्षित भुक्तानी" [level=3] [ref=e658]
+          - paragraph [ref=e115]: तपाईंले सामान पाएको पुष्टि नगरेसम्म पैसा सुरक्षित राखिन्छ। अब अन्धाधुन्ध रकम पठाउनुपर्दैन।
+        - generic [ref=e116]:
+          - img [ref=e118]
+          - generic [ref=e121]: "03"
+          - heading "वास्तविक विवाद समाधान" [level=3] [ref=e659]
+          - paragraph [ref=e123]: केही बिग्रियो भने सच्याउन वास्तविक प्रक्रिया र वास्तविक मानिस छन् — मौनता र ब्लक गरिएको नम्बर होइन।
+    - generic [ref=e125]:
+      - generic [ref=e126]:
+        - generic [ref=e127]: एस्क्रो कसरी काम गर्छ
+        - heading "तपाईंको पैसा कसरी सुरक्षित रहन्छ हेर्नुहोस्।" [level=2] [ref=e660]
+        - paragraph [ref=e129]: प्ले थिच्नुहोस्। एभरेस्टबजारमा हरेक रुपैयाँमा यही हुन्छ।
+      - generic [ref=e130]:
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]: B
+            - generic [ref=e134]: Buyer
+            - generic [ref=e135]: तपाईं
+          - generic [ref=e136]:
+            - img [ref=e138]
+            - generic [ref=e141]: Escrow
+            - generic [ref=e142]: —
+          - generic [ref=e143]:
+            - generic [ref=e144]: S
+            - generic [ref=e145]: Seller
+            - generic [ref=e146]: बिक्रेता
+        - generic [ref=e147]:
+          - button "खरिदकर्ताले तिर्छ — step 1 of 5" [ref=e661] [cursor=pointer]:
+            - generic [ref=e150]: "1"
+          - button "एस्क्रोमा सुरक्षित — step 2 of 5" [ref=e662] [cursor=pointer]:
+            - generic [ref=e152]: "2"
+          - button "बिक्रेताले पठाउँछ — step 3 of 5" [ref=e663] [cursor=pointer]:
+            - generic [ref=e154]: "3"
+          - button "तपाईं पुष्टि गर्नुहुन्छ — step 4 of 5" [ref=e664] [cursor=pointer]:
+            - generic [ref=e156]: "4"
+          - button "बिक्रेतालाई भुक्तानी — step 5 of 5" [ref=e665] [cursor=pointer]:
+            - generic [ref=e158]: "5"
+          - img [ref=e161]
+        - generic [ref=e164]:
+          - img [ref=e166]
+          - generic [ref=e169]:
+            - text: STEP 1 / 5
+            - heading "खरिदकर्ताले तिर्छ" [level=3] [ref=e666]
+            - paragraph [ref=e171]: तपाईं एभरेस्टबजारलाई तिर्नुहुन्छ — सिधै बिक्रेतालाई होइन।
+          - button "फ्लो चलाउनुहोस्" [ref=e667] [cursor=pointer]:
+            - img [ref=e173]
+            - text: फ्लो चलाउनुहोस्
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]: प्रत्यक्ष बजार
+          - heading "प्रमाणित सामानहरू हेर्नुहोस्।" [level=2] [ref=e668]
+        - generic [ref=e181]:
+          - img [ref=e183]
+          - textbox "खोज्नुहोस् “आइफोन”, “स्कुटर”, “सोफा”…" [ref=e669]
+      - generic [ref=e187]:
+        - button "सबै" [pressed] [ref=e670] [cursor=pointer]
+        - button "मोबाइल" [ref=e671] [cursor=pointer]
+        - button "इलेक्ट्रोनिक्स" [ref=e672] [cursor=pointer]
+        - button "सवारी" [ref=e673] [cursor=pointer]
+        - button "फर्निचर" [ref=e674] [cursor=pointer]
+        - button "घरायसी" [ref=e675] [cursor=pointer]
+        - button "फेसन" [ref=e676] [cursor=pointer]
+        - generic [ref=e195]: 12 प्रमाणित सामान
+      - generic [ref=e196]:
+        - link "एस्क्रो आइफोन १३ · १२८जीबी रु 78,000 बानेश्वर, काठमाडौं प्रमाणित 4.9" [ref=e677] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e198]:
+            - img [ref=e199]
+            - generic [ref=e206]:
+              - img [ref=e207]
+              - text: एस्क्रो
+          - generic [ref=e210]:
+            - strong [ref=e211]: आइफोन १३ · १२८जीबी
+            - generic [ref=e212]: रु 78,000
+            - generic [ref=e213]: बानेश्वर, काठमाडौं
+            - generic [ref=e214]:
+              - generic [ref=e215]:
+                - img [ref=e216]
+                - text: प्रमाणित
+              - generic [ref=e218]:
+                - img [ref=e219]
+                - text: "4.9"
+        - link "एस्क्रो रोयल एनफिल्ड क्लासिक ३५० रु 4,25,000 लेकसाइड, पोखरा प्रमाणित 4.8" [ref=e678] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e222]:
+            - img [ref=e223]
+            - generic [ref=e230]:
+              - img [ref=e231]
+              - text: एस्क्रो
+          - generic [ref=e234]:
+            - strong [ref=e235]: रोयल एनफिल्ड क्लासिक ३५०
+            - generic [ref=e236]: रु 4,25,000
+            - generic [ref=e237]: लेकसाइड, पोखरा
+            - generic [ref=e238]:
+              - generic [ref=e239]:
+                - img [ref=e240]
+                - text: प्रमाणित
+              - generic [ref=e242]:
+                - img [ref=e243]
+                - text: "4.8"
+        - link "एस्क्रो काठको अध्ययन टेबल रु 9,500 पाटन, ललितपुर प्रमाणित 5.0" [ref=e679] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e246]:
+            - img [ref=e247]
+            - generic [ref=e254]:
+              - img [ref=e255]
+              - text: एस्क्रो
+          - generic [ref=e258]:
+            - strong [ref=e259]: काठको अध्ययन टेबल
+            - generic [ref=e260]: रु 9,500
+            - generic [ref=e261]: पाटन, ललितपुर
+            - generic [ref=e262]:
+              - generic [ref=e263]:
+                - img [ref=e264]
+                - text: प्रमाणित
+              - generic [ref=e266]:
+                - img [ref=e267]
+                - text: "5.0"
+        - link "एस्क्रो डेल एक्सपीएस १३ ल्यापटप रु 92,000 कुपण्डोल, ललितपुर प्रमाणित 4.7" [ref=e680] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e270]:
+            - img [ref=e271]
+            - generic [ref=e278]:
+              - img [ref=e279]
+              - text: एस्क्रो
+          - generic [ref=e282]:
+            - strong [ref=e283]: डेल एक्सपीएस १३ ल्यापटप
+            - generic [ref=e284]: रु 92,000
+            - generic [ref=e285]: कुपण्डोल, ललितपुर
+            - generic [ref=e286]:
+              - generic [ref=e287]:
+                - img [ref=e288]
+                - text: प्रमाणित
+              - generic [ref=e290]:
+                - img [ref=e291]
+                - text: "4.7"
+        - link "एस्क्रो यामाहा एफजेड स्कुटर रु 2,15,000 महाराजगन्ज, काठमाडौं प्रमाणित 4.6" [ref=e681] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e294]:
+            - img [ref=e295]
+            - generic [ref=e302]:
+              - img [ref=e303]
+              - text: एस्क्रो
+          - generic [ref=e306]:
+            - strong [ref=e307]: यामाहा एफजेड स्कुटर
+            - generic [ref=e308]: रु 2,15,000
+            - generic [ref=e309]: महाराजगन्ज, काठमाडौं
+            - generic [ref=e310]:
+              - generic [ref=e311]:
+                - img [ref=e312]
+                - text: प्रमाणित
+              - generic [ref=e314]:
+                - img [ref=e315]
+                - text: "4.6"
+        - link "एस्क्रो एल-आकारको सोफा सेट रु 32,000 भक्तपुर प्रमाणित 4.8" [ref=e682] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e318]:
+            - img [ref=e319]
+            - generic [ref=e326]:
+              - img [ref=e327]
+              - text: एस्क्रो
+          - generic [ref=e330]:
+            - strong [ref=e331]: एल-आकारको सोफा सेट
+            - generic [ref=e332]: रु 32,000
+            - generic [ref=e333]: भक्तपुर
+            - generic [ref=e334]:
+              - generic [ref=e335]:
+                - img [ref=e336]
+                - text: प्रमाणित
+              - generic [ref=e338]:
+                - img [ref=e339]
+                - text: "4.8"
+        - link "एस्क्रो सोनी ए६४०० + लेन्स रु 1,15,000 झम्सिखेल, ललितपुर प्रमाणित 4.9" [ref=e683] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e342]:
+            - img [ref=e343]
+            - generic [ref=e350]:
+              - img [ref=e351]
+              - text: एस्क्रो
+          - generic [ref=e354]:
+            - strong [ref=e355]: सोनी ए६४०० + लेन्स
+            - generic [ref=e356]: रु 1,15,000
+            - generic [ref=e357]: झम्सिखेल, ललितपुर
+            - generic [ref=e358]:
+              - generic [ref=e359]:
+                - img [ref=e360]
+                - text: प्रमाणित
+              - generic [ref=e362]:
+                - img [ref=e363]
+                - text: "4.9"
+        - link "एस्क्रो ३-बर्नर ग्यास चुलो रु 4,200 चाबहिल, काठमाडौं प्रमाणित 4.5" [ref=e684] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e366]:
+            - img [ref=e367]
+            - generic [ref=e374]:
+              - img [ref=e375]
+              - text: एस्क्रो
+          - generic [ref=e378]:
+            - strong [ref=e379]: ३-बर्नर ग्यास चुलो
+            - generic [ref=e380]: रु 4,200
+            - generic [ref=e381]: चाबहिल, काठमाडौं
+            - generic [ref=e382]:
+              - generic [ref=e383]:
+                - img [ref=e384]
+                - text: प्रमाणित
+              - generic [ref=e386]:
+                - img [ref=e387]
+                - text: "4.5"
+        - link "एस्क्रो नर्थ फेस डाउन ज्याकेट रु 8,800 ठमेल, काठमाडौं प्रमाणित 4.7" [ref=e685] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e390]:
+            - img [ref=e391]
+            - generic [ref=e398]:
+              - img [ref=e399]
+              - text: एस्क्रो
+          - generic [ref=e402]:
+            - strong [ref=e403]: नर्थ फेस डाउन ज्याकेट
+            - generic [ref=e404]: रु 8,800
+            - generic [ref=e405]: ठमेल, काठमाडौं
+            - generic [ref=e406]:
+              - generic [ref=e407]:
+                - img [ref=e408]
+                - text: प्रमाणित
+              - generic [ref=e410]:
+                - img [ref=e411]
+                - text: "4.7"
+        - link "एस्क्रो प्लेस्टेसन ५ + २ प्याड रु 68,000 न्यू रोड, काठमाडौं प्रमाणित 4.8" [ref=e686] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e414]:
+            - img [ref=e415]
+            - generic [ref=e422]:
+              - img [ref=e423]
+              - text: एस्क्रो
+          - generic [ref=e426]:
+            - strong [ref=e427]: प्लेस्टेसन ५ + २ प्याड
+            - generic [ref=e428]: रु 68,000
+            - generic [ref=e429]: न्यू रोड, काठमाडौं
+            - generic [ref=e430]:
+              - generic [ref=e431]:
+                - img [ref=e432]
+                - text: प्रमाणित
+              - generic [ref=e434]:
+                - img [ref=e435]
+                - text: "4.8"
+        - link "एस्क्रो ट्रेक माउन्टेन बाइक रु 46,000 लेकसाइड, पोखरा प्रमाणित 4.9" [ref=e687] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e438]:
+            - img [ref=e439]
+            - generic [ref=e446]:
+              - img [ref=e447]
+              - text: एस्क्रो
+          - generic [ref=e450]:
+            - strong [ref=e451]: ट्रेक माउन्टेन बाइक
+            - generic [ref=e452]: रु 46,000
+            - generic [ref=e453]: लेकसाइड, पोखरा
+            - generic [ref=e454]:
+              - generic [ref=e455]:
+                - img [ref=e456]
+                - text: प्रमाणित
+              - generic [ref=e458]:
+                - img [ref=e459]
+                - text: "4.9"
+        - link "एस्क्रो स्टिल अल्मारी · ३-ढोका रु 14,500 कोटेश्वर, काठमाडौं प्रमाणित 4.6" [ref=e688] [cursor=pointer]:
+          - /url: "#browse"
+          - generic [ref=e462]:
+            - img [ref=e463]
+            - generic [ref=e470]:
+              - img [ref=e471]
+              - text: एस्क्रो
+          - generic [ref=e474]:
+            - strong [ref=e475]: स्टिल अल्मारी · ३-ढोका
+            - generic [ref=e476]: रु 14,500
+            - generic [ref=e477]: कोटेश्वर, काठमाडौं
+            - generic [ref=e478]:
+              - generic [ref=e479]:
+                - img [ref=e480]
+                - text: प्रमाणित
+              - generic [ref=e482]:
+                - img [ref=e483]
+                - text: "4.6"
+      - link "सबै सामान हेर्नुहोस्" [ref=e689] [cursor=pointer]:
+        - /url: "#browse"
+        - text: सबै सामान हेर्नुहोस्
+        - img [ref=e487]
+    - generic [ref=e490]:
+      - generic [ref=e491]:
+        - generic [ref=e492]: बिक्रेता बन्नुहोस्
+        - heading "तीन चरणमा प्रमाणित हुनुहोस्।" [level=2] [ref=e690]
+        - paragraph [ref=e494]: हरेक बिक्रेताले यही जाँच पास गर्छन्। त्यसैले खरिदकर्ताले ब्याजमा विश्वास गर्छन्।
+        - generic [ref=e495]:
+          - generic [ref=e496]:
+            - generic [ref=e497]: "1"
+            - generic [ref=e498]: तपाईंको विवरण
+          - generic [ref=e499]:
+            - generic [ref=e500]: "2"
+            - generic [ref=e501]: परिचय
+          - generic [ref=e502]:
+            - generic [ref=e503]: "3"
+            - generic [ref=e504]: प्रमाणित
+      - generic [ref=e506]:
+        - generic [ref=e507]:
+          - generic [ref=e508]: पूरा नाम
+          - textbox "पूरा नाम" [ref=e691]:
+            - /placeholder: जस्तै आरती श्रेष्ठ
+        - generic [ref=e510]:
+          - generic [ref=e511]: मोबाइल नम्बर
+          - generic [ref=e512]:
+            - generic [ref=e513]: "+977"
+            - textbox "मोबाइल नम्बर +977" [ref=e692]:
+              - /placeholder: 98XXXXXXXX
+        - button "अगाडि बढ्नुहोस्" [ref=e693] [cursor=pointer]:
+          - text: अगाडि बढ्नुहोस्
+          - img [ref=e516]
+    - generic [ref=e520]:
+      - generic [ref=e521]:
+        - generic [ref=e522]: एप लिनुहोस्
+        - heading "सबैभन्दा सुरक्षित बजार आफ्नो खल्तीमा बोक्नुहोस्।" [level=2] [ref=e694]
+        - paragraph [ref=e524]: किनमेल, कुराकानी, एस्क्रो भुक्तानी र डेलिभरी ट्र्याक — सबै तपाईंको फोनबाट।
+        - generic [ref=e525]:
+          - link "डाउनलोड गर्नुहोस् एप स्टोर" [ref=e695] [cursor=pointer]:
+            - /url: "#top"
+            - generic [ref=e527]: डाउनलोड गर्नुहोस्
+            - generic [ref=e528]: एप स्टोर
+          - link "यहाँ पाउनुहोस् गुगल प्ले" [ref=e696] [cursor=pointer]:
+            - /url: "#top"
+            - generic [ref=e530]: यहाँ पाउनुहोस्
+            - generic [ref=e531]: गुगल प्ले
+      - generic [ref=e535]:
+        - generic [ref=e536]:
+          - img [ref=e537]
+          - generic [ref=e540]: EverestBazar
+        - generic [ref=e542]:
+          - img [ref=e543]
+          - generic [ref=e546]: खोज्नुहोस्
+        - generic [ref=e547]:
+          - img [ref=e549]
+          - img [ref=e560]
+          - img [ref=e571]
+          - img [ref=e582]
+  - contentinfo [ref=e592]:
+    - generic [ref=e593]:
+      - generic [ref=e594]:
+        - generic [ref=e595]:
+          - link "EverestBazar — home" [ref=e596] [cursor=pointer]:
+            - /url: "#top"
+            - img [ref=e597]
+            - generic [ref=e600]: EverestBazar
+          - paragraph [ref=e601]: व्यापारमा नेपालको सर्वोच्च मापदण्ड।
+        - generic [ref=e602]:
+          - generic [ref=e603]: बजार
+          - list [ref=e604]:
+            - listitem [ref=e605]:
+              - link "सामान हेर्नुहोस्" [ref=e697] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e607]:
+              - link "कोटिहरू" [ref=e698] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e609]:
+              - link "एस्क्रो कसरी काम गर्छ" [ref=e699] [cursor=pointer]:
+                - /url: "#top"
+        - generic [ref=e611]:
+          - generic [ref=e612]: बेच्नुहोस्
+          - list [ref=e613]:
+            - listitem [ref=e614]:
+              - link "बिक्रेता बन्नुहोस्" [ref=e700] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e616]:
+              - link "बिक्रेता सुरक्षा" [ref=e701] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e618]:
+              - link "शुल्क" [ref=e702] [cursor=pointer]:
+                - /url: "#top"
+        - generic [ref=e620]:
+          - generic [ref=e621]: भरोसा र सुरक्षा
+          - list [ref=e622]:
+            - listitem [ref=e623]:
+              - link "प्रमाणीकरण" [ref=e703] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e625]:
+              - link "विवाद समाधान" [ref=e704] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e627]:
+              - link "ठगी उजुरी" [ref=e705] [cursor=pointer]:
+                - /url: "#top"
+        - generic [ref=e629]:
+          - generic [ref=e630]: कम्पनी
+          - list [ref=e631]:
+            - listitem [ref=e632]:
+              - link "हाम्रोबारे" [ref=e706] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e634]:
+              - link "करियर" [ref=e707] [cursor=pointer]:
+                - /url: "#top"
+            - listitem [ref=e636]:
+              - link "सम्पर्क" [ref=e708] [cursor=pointer]:
+                - /url: "#top"
+      - generic [ref=e638]:
+        - generic [ref=e639]: © २०२६ एभरेस्टबजार। सर्वाधिकार सुरक्षित।
+        - generic [ref=e640]: नेपालमा बनेको
+  - alert [ref=e647]

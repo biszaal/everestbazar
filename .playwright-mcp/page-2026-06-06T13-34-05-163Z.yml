@@ -1,0 +1,26 @@
+- generic [ref=e1]:
+  - alert [ref=e2]: EverestBazar — Nepal's trusted secondhand marketplace
+  - generic [ref=e3]:
+    - generic [ref=e10]:
+      - link "EverestBazar — home" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - img [ref=e12]
+        - generic [ref=e15]: EverestBazar
+      - group "Language" [ref=e16]:
+        - button "EN" [pressed] [ref=e17] [cursor=pointer]
+        - button "ने" [ref=e18] [cursor=pointer]
+    - generic [ref=e21]:
+      - generic [ref=e22]: Become a seller
+      - heading "Welcome to EverestBazar" [level=1] [ref=e23]
+      - paragraph [ref=e24]: Sign in to sell. Enter your mobile number and we'll text a one-time code.
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: Mobile number
+          - generic [ref=e28]:
+            - generic [ref=e29]: "+977"
+            - textbox "Mobile number +977" [active] [ref=e30]:
+              - /placeholder: 98XXXXXXXX
+        - button "Send code" [ref=e31] [cursor=pointer]:
+          - text: Send code
+          - img [ref=e32]
+      - paragraph [ref=e34]: By continuing you agree to our Terms of Service.

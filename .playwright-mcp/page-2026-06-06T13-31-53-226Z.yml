@@ -1,0 +1,247 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+      - /url: "#content"
+    - banner [ref=e4]:
+      - generic [ref=e12]:
+        - link "EverestBazar — home" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e14]
+          - generic [ref=e17]: EverestBazar
+        - navigation [ref=e18]:
+          - link "Browse" [ref=e19] [cursor=pointer]:
+            - /url: /browse
+          - link "How it works" [ref=e20] [cursor=pointer]:
+            - /url: /#how
+          - link "Sell" [ref=e21] [cursor=pointer]:
+            - /url: /sell
+        - generic [ref=e22]:
+          - group "Language" [ref=e23]:
+            - button "EN" [pressed] [ref=e24] [cursor=pointer]
+            - button "ने" [ref=e25] [cursor=pointer]
+          - link "Log in" [ref=e26] [cursor=pointer]:
+            - /url: /login
+          - link "Sell an item" [ref=e27] [cursor=pointer]:
+            - /url: /sell
+    - main [ref=e28]:
+      - generic [ref=e29]:
+        - link "Back to browse" [ref=e30] [cursor=pointer]:
+          - /url: /browse
+          - img [ref=e32]
+          - text: Back to browse
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - img [ref=e37]
+              - generic [ref=e45]: Good
+              - generic [ref=e46]: 1 / 4
+            - generic [ref=e47]:
+              - button "Photo 1" [ref=e48] [cursor=pointer]:
+                - img [ref=e49]
+              - button "Photo 2" [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+              - button "Photo 3" [ref=e64] [cursor=pointer]:
+                - img [ref=e65]
+              - button "Photo 4" [ref=e72] [cursor=pointer]:
+                - img [ref=e73]
+          - generic [ref=e80]:
+            - generic [ref=e81]: Rs 78,000
+            - generic [ref=e82]:
+              - img [ref=e83]
+              - text: Pakka Protected
+            - heading "iPhone 13 · 128GB" [level=1] [ref=e86]
+            - generic [ref=e87]:
+              - generic [ref=e88]: Baneshwor, KTM
+              - generic [ref=e89]: ·
+              - generic [ref=e90]:
+                - img [ref=e91]
+                - text: "4.9"
+            - generic [ref=e93]:
+              - link "Buy now — Rs 78,000" [ref=e94] [cursor=pointer]:
+                - /url: /checkout/1
+              - button "Message seller" [ref=e95] [cursor=pointer]
+            - paragraph [ref=e96]:
+              - img [ref=e97]
+              - text: No account needed to buy — your payment is protected by escrow.
+            - generic [ref=e100]:
+              - generic [ref=e101]: बि
+              - generic [ref=e102]:
+                - generic [ref=e103]:
+                  - strong [ref=e104]: Bibek Gurung
+                  - generic [ref=e105]:
+                    - img [ref=e106]
+                    - text: Verified
+                - generic [ref=e108]: 13 completed sales · Member since 2022
+              - img "Trust score 95 out of 100" [ref=e109]:
+                - img [ref=e110]
+                - generic [ref=e113]: "95"
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "About this item" [level=2] [ref=e116]
+            - paragraph [ref=e117]: Well looked-after and fully functional. No major scratches, battery holds well through a day of normal use. Comes boxed with charger. Happy to demo over chat before you decide.
+          - generic [ref=e118]:
+            - heading "Details" [level=2] [ref=e119]
+            - generic [ref=e120]:
+              - generic [ref=e121]:
+                - term [ref=e122]: Brand
+                - definition [ref=e123]: iPhone
+              - generic [ref=e124]:
+                - term [ref=e125]: Model
+                - definition [ref=e126]: "13"
+              - generic [ref=e127]:
+                - term [ref=e128]: Battery health
+                - definition [ref=e129]: 89%
+              - generic [ref=e130]:
+                - term [ref=e131]: Accessories
+                - definition [ref=e132]: Box, charger
+              - generic [ref=e133]:
+                - term [ref=e134]: Category
+                - definition [ref=e135]: Mobiles
+              - generic [ref=e136]:
+                - term [ref=e137]: Location
+                - definition [ref=e138]: Baneshwor, KTM
+              - generic [ref=e139]:
+                - term [ref=e140]: Seller rating
+                - definition [ref=e141]: 4.9 / 5
+        - paragraph [ref=e142]:
+          - button "Report this listing" [ref=e143] [cursor=pointer]
+        - generic [ref=e144]:
+          - heading "Similar listings" [level=2] [ref=e145]
+          - generic [ref=e146]:
+            - link "Fair Escrow Royal Enfield Classic 350 Rs 4,25,000 Lakeside, Pokhara Verified 4.8" [ref=e147] [cursor=pointer]:
+              - /url: /listing/2
+              - generic [ref=e148]:
+                - img [ref=e149]
+                - generic [ref=e157]: Fair
+                - generic [ref=e158]:
+                  - img [ref=e159]
+                  - text: Escrow
+              - generic [ref=e162]:
+                - strong [ref=e163]: Royal Enfield Classic 350
+                - generic [ref=e164]: Rs 4,25,000
+                - generic [ref=e165]: Lakeside, Pokhara
+                - generic [ref=e166]:
+                  - generic [ref=e167]:
+                    - img [ref=e168]
+                    - text: Verified
+                  - generic [ref=e170]:
+                    - img [ref=e171]
+                    - text: "4.8"
+            - link "Like New Escrow Solid wood study table Rs 9,500 Patan, Lalitpur Verified 5.0" [ref=e173] [cursor=pointer]:
+              - /url: /listing/3
+              - generic [ref=e174]:
+                - img [ref=e175]
+                - generic [ref=e183]: Like New
+                - generic [ref=e184]:
+                  - img [ref=e185]
+                  - text: Escrow
+              - generic [ref=e188]:
+                - strong [ref=e189]: Solid wood study table
+                - generic [ref=e190]: Rs 9,500
+                - generic [ref=e191]: Patan, Lalitpur
+                - generic [ref=e192]:
+                  - generic [ref=e193]:
+                    - img [ref=e194]
+                    - text: Verified
+                  - generic [ref=e196]:
+                    - img [ref=e197]
+                    - text: "5.0"
+            - link "Good Escrow Dell XPS 13 laptop Rs 92,000 Kupondole, LTP Verified 4.7" [ref=e199] [cursor=pointer]:
+              - /url: /listing/4
+              - generic [ref=e200]:
+                - img [ref=e201]
+                - generic [ref=e209]: Good
+                - generic [ref=e210]:
+                  - img [ref=e211]
+                  - text: Escrow
+              - generic [ref=e214]:
+                - strong [ref=e215]: Dell XPS 13 laptop
+                - generic [ref=e216]: Rs 92,000
+                - generic [ref=e217]: Kupondole, LTP
+                - generic [ref=e218]:
+                  - generic [ref=e219]:
+                    - img [ref=e220]
+                    - text: Verified
+                  - generic [ref=e222]:
+                    - img [ref=e223]
+                    - text: "4.7"
+            - link "Fair Escrow Yamaha FZ scooter Rs 2,15,000 Maharajgunj, KTM Verified 4.6" [ref=e225] [cursor=pointer]:
+              - /url: /listing/5
+              - generic [ref=e226]:
+                - img [ref=e227]
+                - generic [ref=e235]: Fair
+                - generic [ref=e236]:
+                  - img [ref=e237]
+                  - text: Escrow
+              - generic [ref=e240]:
+                - strong [ref=e241]: Yamaha FZ scooter
+                - generic [ref=e242]: Rs 2,15,000
+                - generic [ref=e243]: Maharajgunj, KTM
+                - generic [ref=e244]:
+                  - generic [ref=e245]:
+                    - img [ref=e246]
+                    - text: Verified
+                  - generic [ref=e248]:
+                    - img [ref=e249]
+                    - text: "4.6"
+    - contentinfo [ref=e251]:
+      - generic [ref=e252]:
+        - generic [ref=e253]:
+          - generic [ref=e254]:
+            - link "EverestBazar — home" [ref=e255] [cursor=pointer]:
+              - /url: "#top"
+              - img [ref=e256]
+              - generic [ref=e259]: EverestBazar
+            - paragraph [ref=e260]: Nepal’s highest standard in commerce.
+          - generic [ref=e261]:
+            - generic [ref=e262]: Marketplace
+            - list [ref=e263]:
+              - listitem [ref=e264]:
+                - link "Browse listings" [ref=e265] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e266]:
+                - link "Categories" [ref=e267] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e268]:
+                - link "How escrow works" [ref=e269] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e270]:
+            - generic [ref=e271]: Sell
+            - list [ref=e272]:
+              - listitem [ref=e273]:
+                - link "Become a seller" [ref=e274] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e275]:
+                - link "Seller protection" [ref=e276] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e277]:
+                - link "Fees" [ref=e278] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e279]:
+            - generic [ref=e280]: Trust & Safety
+            - list [ref=e281]:
+              - listitem [ref=e282]:
+                - link "Verification" [ref=e283] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e284]:
+                - link "Dispute resolution" [ref=e285] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e286]:
+                - link "Report fraud" [ref=e287] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e288]:
+            - generic [ref=e289]: Company
+            - list [ref=e290]:
+              - listitem [ref=e291]:
+                - link "About" [ref=e292] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e293]:
+                - link "Careers" [ref=e294] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e295]:
+                - link "Contact" [ref=e296] [cursor=pointer]:
+                  - /url: "#top"
+        - generic [ref=e297]:
+          - generic [ref=e298]: © 2026 EverestBazar. All rights reserved.
+          - generic [ref=e299]: Built in Nepal
+  - alert [ref=e306]

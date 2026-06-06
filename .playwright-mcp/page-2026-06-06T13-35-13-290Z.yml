@@ -1,0 +1,33 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]: EverestBazar — Nepal's trusted secondhand marketplace
+  - generic [ref=e3]:
+    - generic [ref=e10]:
+      - link "EverestBazar — home" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - img [ref=e12]
+        - generic [ref=e15]: EverestBazar
+      - group "Language" [ref=e16]:
+        - button "EN" [pressed] [ref=e17] [cursor=pointer]
+        - button "ने" [ref=e18] [cursor=pointer]
+    - generic [ref=e52]:
+      - generic [ref=e58]: Step 1 / 3
+      - heading "Verify your identity" [level=1] [ref=e59]
+      - paragraph [ref=e60]: Sellers verify once against their National ID. It's why buyers trust the badge.
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]: Front of citizenship / NID
+          - button "Drag a photo here or tap to choose" [ref=e64] [cursor=pointer]:
+            - generic [ref=e65]:
+              - img [ref=e66]
+              - generic [ref=e69]: Drag a photo here or tap to choose
+        - generic [ref=e70]:
+          - generic [ref=e71]: Back of citizenship / NID
+          - button "Drag a photo here or tap to choose" [ref=e72] [cursor=pointer]:
+            - generic [ref=e73]:
+              - img [ref=e74]
+              - generic [ref=e77]: Drag a photo here or tap to choose
+      - group [ref=e78]:
+        - generic "Why do we need this?" [ref=e79] [cursor=pointer]
+      - button "Continue" [disabled] [ref=e80] [cursor=pointer]:
+        - text: Continue
+        - img [ref=e81]

@@ -1,0 +1,26 @@
+- generic [ref=e1]:
+  - alert [ref=e2]: EverestBazar — Nepal's trusted secondhand marketplace
+  - generic [ref=e3]:
+    - generic [ref=e10]:
+      - link "EverestBazar — home" [ref=e11] [cursor=pointer]:
+        - /url: /
+        - img [ref=e12]
+        - generic [ref=e15]: EverestBazar
+      - group "Language" [ref=e16]:
+        - button "EN" [pressed] [ref=e17] [cursor=pointer]
+        - button "ने" [ref=e18] [cursor=pointer]
+    - generic [ref=e35]:
+      - heading "Enter your code" [level=1] [ref=e36]
+      - paragraph [ref=e37]:
+        - text: Sent to
+        - strong [ref=e38]: "+9779809876543"
+      - generic [ref=e40]:
+        - textbox "Digit 1" [active] [ref=e41]
+        - textbox "Digit 2" [ref=e42]
+        - textbox "Digit 3" [ref=e43]
+        - textbox "Digit 4" [ref=e44]
+        - textbox "Digit 5" [ref=e45]
+        - textbox "Digit 6" [ref=e46]
+      - paragraph [ref=e47]: "Demo code: 123456"
+      - generic [ref=e49]: Resend in 44s
+      - button "Change number" [ref=e51] [cursor=pointer]
