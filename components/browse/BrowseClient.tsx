@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
 import { ListingCard } from "@/components/listing/ListingCard";
-import { CATALOG } from "@/lib/catalog";
 import { BROWSE_CATEGORIES } from "@/lib/listings";
+import { createClient } from "@/lib/supabase/client";
+import { getActiveListings } from "@/lib/data";
+import type { UiListing } from "@/lib/adapters";
 import { rs } from "@/lib/format";
 import type { Condition } from "@/lib/types";
 import type { StringKey } from "@/lib/i18n";
@@ -23,6 +25,26 @@ export function BrowseClient() {
   const [conds, setConds] = useState<Set<Condition>>(new Set());
   const [maxPrice, setMaxPrice] = useState(0);
   const [sort, setSort] = useState<Sort>("new");
+  const [items, setItems] = useState<UiListing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // load active listings from Supabase
+  useEffect(() => {
+    let alive = true;
+    getActiveListings(createClient())
+      .then((rows) => {
+        if (alive) setItems(rows);
+      })
+      .catch(() => {
+        if (alive) setItems([]);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // hydrate filters from URL once
   useEffect(() => {
@@ -52,7 +74,7 @@ export function BrowseClient() {
 
   const results = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    const list = CATALOG.filter((it) => {
+    const list = items.filter((it) => {
       if (cat !== "all" && it.cat !== cat) return false;
       if (conds.size && !conds.has(it.condition)) return false;
       if (maxPrice && it.price > maxPrice) return false;
@@ -62,11 +84,11 @@ export function BrowseClient() {
       }
       return true;
     });
+    // 'new' keeps the fetched order (already newest-first from the DB)
     if (sort === "low") list.sort((a, b) => a.price - b.price);
     else if (sort === "high") list.sort((a, b) => b.price - a.price);
-    else list.sort((a, b) => b.id - a.id);
     return list;
-  }, [q, cat, conds, maxPrice, sort]);
+  }, [items, q, cat, conds, maxPrice, sort]);
 
   const toggleCond = (c: Condition) =>
     setConds((prev) => {
@@ -256,7 +278,25 @@ export function BrowseClient() {
         </div>
 
         {/* grid */}
-        {results.length === 0 ? (
+        {loading ? (
+          <div
+            className="eb-listing-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              gap: 22,
+              margin: "26px 0 80px",
+            }}
+          >
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="card"
+                style={{ height: 248, background: "var(--paper-2)", border: "1px solid var(--line)" }}
+              />
+            ))}
+          </div>
+        ) : results.length === 0 ? (
           <div style={{ textAlign: "center", padding: "70px 0" }}>
             <p style={{ color: "var(--ink-soft)", fontSize: 16 }}>{t("bp.empty")}</p>
             <button

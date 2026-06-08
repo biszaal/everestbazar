@@ -18,9 +18,10 @@ export type TxnStatus =
   | "REFUNDED"
   | "CANCELLED";
 
-/** Authenticated user (mock — real shape lives in CLAUDE.md). */
+/** Authenticated user (Supabase session + profile). */
 export interface SessionUser {
-  phone: string; // +977XXXXXXXXXX
+  id: string; // auth.users.id
+  email: string;
   name: string;
   kycStatus: KycStatus;
 }

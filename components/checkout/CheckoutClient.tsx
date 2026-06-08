@@ -1,17 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon, type IconName } from "@/components/brand/Icon";
 import { GeoThumb } from "@/components/brand/GeoThumb";
 import { ConditionBadge } from "@/components/listing/ConditionBadge";
-import { useUser } from "@/store/authStore";
-import { useTxnStore } from "@/store/txnStore";
+import { useUser, useAuthHydrated } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
 import { rs } from "@/lib/format";
-import { isValidMobileDigits } from "@/lib/validate";
 import { buyerTotal, ESCROW_FEE_NPR, type PaymentMethod } from "@/lib/types";
-import type { RichListing } from "@/lib/catalog";
+import type { UiListing } from "@/lib/adapters";
 import type { StringKey } from "@/lib/i18n";
 
 const ESCROW_STEPS: { ic: IconName; k: StringKey }[] = [
@@ -21,36 +21,62 @@ const ESCROW_STEPS: { ic: IconName; k: StringKey }[] = [
   { ic: "scales", k: "co.p4" },
 ];
 
-export function CheckoutClient({ listing }: { listing: RichListing }) {
+export function CheckoutClient({ listing }: { listing: UiListing }) {
   const { t, lang } = useT();
   const router = useRouter();
+  const hydrated = useAuthHydrated();
   const user = useUser();
-  const addPurchase = useTxnStore((s) => s.addPurchase);
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [phone, setPhone] = useState(user ? user.phone.replace("+977", "") : "");
   const [pay, setPay] = useState<PaymentMethod | null>(null);
   const [processing, setProcessing] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; phone?: string; pay?: boolean }>({});
+  const [error, setError] = useState("");
+  const [payError, setPayError] = useState(false);
 
   const total = buyerTotal(listing.price);
+  const verified = user?.kycStatus === "VERIFIED";
 
-  const confirm = () => {
-    const errs: typeof errors = {};
-    if (!name.trim()) errs.name = t("sell.errName");
-    if (!isValidMobileDigits(phone)) errs.phone = t("sell.errPhone");
-    if (!pay) errs.pay = true;
-    setErrors(errs);
-    if (Object.keys(errs).length) return;
+  // require login to buy
+  useEffect(() => {
+    if (hydrated && !user) router.replace(`/login?redirect=/checkout/${listing.id}`);
+  }, [hydrated, user, router, listing.id]);
 
+  const confirm = async () => {
+    if (!pay) {
+      setPayError(true);
+      return;
+    }
     setProcessing(true);
-    // MOCK: real flow posts a transaction, then redirects to the eSewa/Khalti
-    // gateway, which calls our webhook to move the txn to ESCROW_HELD.
-    addPurchase(listing.id, pay!);
-    setTimeout(() => {
-      router.push(`/checkout/success?id=${listing.id}`);
-    }, 1100);
+    setError("");
+    // server computes fees + reserves the listing (create_transaction RPC)
+    const supabase = createClient();
+    const { error: rpcError } = await supabase.rpc("create_transaction", {
+      p_listing_id: listing.id,
+      p_payment: pay,
+    });
+    if (rpcError) {
+      setProcessing(false);
+      setError(rpcError.message);
+      return;
+    }
+    // real flow redirects to the eSewa/Khalti gateway here; demo → success
+    router.push(`/checkout/success?id=${listing.id}`);
   };
+
+  if (!hydrated || !user) return null; // redirecting to /login
+
+  if (!verified) {
+    return (
+      <div className="wrap" style={{ padding: "60px 28px", maxWidth: 480, textAlign: "center" }}>
+        <div className="card" style={{ padding: "32px 28px", borderRadius: 22 }}>
+          <Icon name="shield" size={38} stroke="var(--crimson)" />
+          <h1 style={{ fontSize: 22, marginTop: 14 }}>{t("sg.needKyc")}</h1>
+          <Link href="/kyc/upload" className="btn btn-primary" style={{ marginTop: 18 }}>
+            {t("sg.verifyNow")} <Icon name="arrow" size={18} sw={2.2} />
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="wrap" style={{ padding: "26px 28px 90px" }}>
@@ -81,7 +107,12 @@ export function CheckoutClient({ listing }: { listing: RichListing }) {
           {/* item */}
           <section className="card" style={{ padding: 16, display: "flex", gap: 14, alignItems: "center" }}>
             <div style={{ width: 72, height: 72, borderRadius: 12, overflow: "hidden", flex: "0 0 auto" }}>
-              <GeoThumb hue={listing.hue} seed={listing.id} height={72} />
+              {listing.photoUrls[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={listing.photoUrls[0]} alt={listing.en} style={{ width: 72, height: 72, objectFit: "cover", display: "block" }} />
+              ) : (
+                <GeoThumb hue={listing.hue} seed={listing.seed} height={72} />
+              )}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <strong style={{ fontFamily: "var(--display)", fontSize: 16 }}>
@@ -155,43 +186,11 @@ export function CheckoutClient({ listing }: { listing: RichListing }) {
             <p style={{ fontSize: 13, color: "var(--ink-soft)", marginTop: 6 }}>
               {t("co.contactNote")}
             </p>
-            {user && (
-              <p style={{ fontSize: 13, color: "var(--ink-soft)", marginTop: 6 }}>
-                {t("co.signedInAs")}{" "}
-                <strong style={{ fontFamily: "var(--mono)" }}>{user.phone}</strong>
-              </p>
-            )}
-            <div style={{ display: "grid", gap: 14, marginTop: 14 }}>
-              <label style={{ display: "block" }}>
-                <span style={labelStyle}>{t("sell.name")}</span>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t("sell.namePh")}
-                  className="eb-input"
-                  style={{ borderColor: errors.name ? "var(--crimson)" : "var(--line-2)" }}
-                />
-                {errors.name && <ErrText>{errors.name}</ErrText>}
-              </label>
-              <label style={{ display: "block" }}>
-                <span style={labelStyle}>{t("sell.phone")}</span>
-                <div style={{ display: "flex" }}>
-                  <span style={prefixStyle}>+977</span>
-                  <input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                    inputMode="numeric"
-                    placeholder="98XXXXXXXX"
-                    className="eb-input"
-                    style={{
-                      borderRadius: "0 12px 12px 0",
-                      borderColor: errors.phone ? "var(--crimson)" : "var(--line-2)",
-                    }}
-                  />
-                </div>
-                {errors.phone && <ErrText>{errors.phone}</ErrText>}
-              </label>
-            </div>
+            <p style={{ fontSize: 14, marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
+              <Icon name="check" size={15} sw={2.6} stroke="var(--green)" />
+              {t("co.signedInAs")}{" "}
+              <strong style={{ fontFamily: "var(--mono)" }}>{user.email}</strong>
+            </p>
           </section>
 
           {/* delivery */}
@@ -220,7 +219,7 @@ export function CheckoutClient({ listing }: { listing: RichListing }) {
                 onClick={() => setPay("KHALTI")}
               />
             </div>
-            {errors.pay && <ErrText>{t("co.payment")}</ErrText>}
+            {payError && <ErrText>{t("co.payment")}</ErrText>}
           </section>
         </div>
 
@@ -265,31 +264,16 @@ export function CheckoutClient({ listing }: { listing: RichListing }) {
             <Icon name="lock" size={14} sw={2} stroke="var(--steel)" />
             {t("co.payNote")}
           </p>
+          {error && (
+            <p role="alert" style={{ color: "var(--crimson)", fontSize: 12.5, marginTop: 10, textAlign: "center" }}>
+              {error}
+            </p>
+          )}
         </aside>
       </div>
     </div>
   );
 }
-
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: 13.5,
-  fontWeight: 600,
-  marginBottom: 7,
-  color: "var(--ink-2)",
-};
-const prefixStyle: React.CSSProperties = {
-  display: "grid",
-  placeItems: "center",
-  padding: "0 14px",
-  background: "var(--paper-2)",
-  border: "1px solid var(--line-2)",
-  borderRight: "none",
-  borderRadius: "12px 0 0 12px",
-  fontFamily: "var(--mono)",
-  fontSize: 14,
-  color: "var(--ink-soft)",
-};
 
 function ErrText({ children }: { children: React.ReactNode }) {
   return (

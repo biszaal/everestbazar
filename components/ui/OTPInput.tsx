@@ -70,7 +70,7 @@ export function OTPInput({
   return (
     <div
       className={error ? "eb-shake" : undefined}
-      style={{ display: "flex", gap: 10, justifyContent: "center" }}
+      style={{ display: "flex", gap: 8, justifyContent: "center" }}
     >
       {Array.from({ length }).map((_, i) => (
         <input
@@ -89,12 +89,14 @@ export function OTPInput({
           onPaste={handlePaste}
           onFocus={(e) => e.target.select()}
           style={{
-            width: 46,
-            height: 56,
+            flex: "1 1 0",
+            minWidth: 0,
+            maxWidth: 48,
+            height: 54,
             textAlign: "center",
             fontFamily: "var(--display)",
             fontWeight: 700,
-            fontSize: 24,
+            fontSize: 22,
             color: "var(--ink)",
             background: "var(--paper)",
             border: "1.5px solid",

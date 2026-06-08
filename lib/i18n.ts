@@ -353,9 +353,12 @@ export const STRINGS = {
   // ---- auth ----
   "au.welcome": { en: "Welcome to EverestBazar", ne: "एभरेस्टबजारमा स्वागत छ" },
   "au.loginSub": {
-    en: "Sign in to sell. Enter your mobile number and we'll text a one-time code.",
-    ne: "बेच्न लग इन गर्नुहोस्। मोबाइल नम्बर लेख्नुहोस्, हामी OTP पठाउँछौं।",
+    en: "Sign in to buy or sell. Enter your email and we'll send a one-time code.",
+    ne: "किन्न वा बेच्न लग इन गर्नुहोस्। इमेल लेख्नुहोस्, हामी एक-पटके कोड पठाउँछौं।",
   },
+  "au.emailLabel": { en: "Email", ne: "इमेल" },
+  "au.emailPh": { en: "you@example.com", ne: "you@example.com" },
+  "au.errEmail": { en: "Enter a valid email address.", ne: "मान्य इमेल ठेगाना लेख्नुहोस्।" },
   "au.sendOtp": { en: "Send code", ne: "कोड पठाउनुहोस्" },
   "au.terms": {
     en: "By continuing you agree to our Terms of Service.",
@@ -363,12 +366,12 @@ export const STRINGS = {
   },
   "au.otpTitle": { en: "Enter your code", ne: "कोड लेख्नुहोस्" },
   "au.otpSub": { en: "Sent to", ne: "पठाइयो" },
-  "au.otpHint": { en: "Demo code: 123456", ne: "डेमो कोड: १२३४५६" },
+  "au.otpHint": { en: "Enter the code from your email.", ne: "इमेलमा आएको कोड लेख्नुहोस्।" },
   "au.resendIn": { en: "Resend in", ne: "पुनः पठाउनुहोस्" },
   "au.resend": { en: "Resend code", ne: "कोड पुनः पठाउनुहोस्" },
   "au.verify": { en: "Verify", ne: "प्रमाणित गर्नुहोस्" },
   "au.otpErr": { en: "That code isn't right — try again.", ne: "कोड मिलेन — फेरि प्रयास गर्नुहोस्।" },
-  "au.changeNumber": { en: "Change number", ne: "नम्बर बदल्नुहोस्" },
+  "au.changeNumber": { en: "Use a different email", ne: "अर्को इमेल प्रयोग गर्नुहोस्" },
 
   // ---- kyc ----
   "kyc.uploadTitle": { en: "Verify your identity", ne: "आफ्नो परिचय प्रमाणित गर्नुहोस्" },

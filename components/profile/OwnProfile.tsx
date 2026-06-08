@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
@@ -8,7 +8,8 @@ import { TrustScore } from "@/components/user/TrustScore";
 import { EscrowStatus } from "@/components/checkout/EscrowStatus";
 import { ReviewItem } from "@/components/user/Review";
 import { useAuthStore, useAuthHydrated, useUser } from "@/store/authStore";
-import { useTxnStore, useTxnHydrated } from "@/store/txnStore";
+import { createClient } from "@/lib/supabase/client";
+import { getMyTransactions, type MyTxn } from "@/lib/data";
 import { reviewsFor } from "@/lib/reviews";
 import type { StringKey } from "@/lib/i18n";
 
@@ -17,14 +18,24 @@ type Tab = "listings" | "purchases" | "sales" | "reviews";
 export function OwnProfile() {
   const { t } = useT();
   const authHydrated = useAuthHydrated();
-  const txnHydrated = useTxnHydrated();
   const user = useUser();
   const setName = useAuthStore((s) => s.setName);
-  const txns = useTxnStore((s) => s.txns);
 
   const [tab, setTab] = useState<Tab>("listings");
   const [editing, setEditing] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
+  const [txns, setTxns] = useState<MyTxn[]>([]);
+
+  const loadTxns = useCallback(() => {
+    if (!user) return;
+    getMyTransactions(createClient(), user.id)
+      .then(setTxns)
+      .catch(() => setTxns([]));
+  }, [user]);
+
+  useEffect(() => {
+    if (authHydrated && user) loadTxns();
+  }, [authHydrated, user, loadTxns]);
 
   if (!authHydrated) return null;
 
@@ -46,11 +57,11 @@ export function OwnProfile() {
   const purchases = txns.filter((tx) => tx.role === "buyer" && tx.status === "COMPLETED").length;
   const verified = user.kycStatus === "VERIFIED";
   const trust = Math.min(100, Math.round(sales * 8 + purchases * 4 + 4.8 * 12 + (verified ? 30 : 0)));
-  const maskedPhone = `+977 ••••${user.phone.slice(-4)}`;
+  const maskedPhone = user.email;
 
   const buyerTxns = txns.filter((tx) => tx.role === "buyer");
   const sellerTxns = txns.filter((tx) => tx.role === "seller");
-  const reviews = reviewsFor(user.phone.length, 3);
+  const reviews = reviewsFor(user.email.length, 3);
 
   const tabs: { key: Tab; label: StringKey }[] = [
     { key: "listings", label: "pf.tabListings" },
@@ -84,7 +95,7 @@ export function OwnProfile() {
             flex: "0 0 auto",
           }}
         >
-          {(user.name.trim()[0] ?? user.phone.slice(-1)).toUpperCase()}
+          {(user.name.trim()[0] ?? user.email[0] ?? "?").toUpperCase()}
         </span>
         <div style={{ flex: 1, minWidth: 200 }}>
           {editing ? (
@@ -189,10 +200,10 @@ export function OwnProfile() {
         )}
 
         {tab === "purchases" && (
-          <TxnList list={txnHydrated ? buyerTxns : []} empty={t("dash.empty")} />
+          <TxnList list={buyerTxns} empty={t("dash.empty")} onChanged={loadTxns} />
         )}
         {tab === "sales" && (
-          <TxnList list={txnHydrated ? sellerTxns : []} empty={t("dash.empty")} />
+          <TxnList list={sellerTxns} empty={t("dash.empty")} onChanged={loadTxns} />
         )}
 
         {tab === "reviews" && (
@@ -211,13 +222,13 @@ export function OwnProfile() {
   );
 }
 
-function TxnList({ list, empty }: { list: ReturnType<typeof useTxnStore.getState>["txns"]; empty: string }) {
+function TxnList({ list, empty, onChanged }: { list: MyTxn[]; empty: string; onChanged: () => void }) {
   if (list.length === 0)
     return <p style={{ color: "var(--ink-soft)", textAlign: "center", padding: "40px 0" }}>{empty}</p>;
   return (
     <div style={{ display: "grid", gap: 14 }}>
       {list.map((tx) => (
-        <EscrowStatus key={tx.id} txn={tx} />
+        <EscrowStatus key={tx.id} txn={tx} onChanged={onChanged} />
       ))}
     </div>
   );

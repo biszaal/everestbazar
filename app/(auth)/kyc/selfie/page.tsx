@@ -6,20 +6,24 @@ import { useT } from "@/components/providers/LanguageProvider";
 import { useAuthStore, useAuthHydrated, useUser } from "@/store/authStore";
 import { KycSteps } from "@/components/kyc/KycSteps";
 import { Icon } from "@/components/brand/Icon";
+import { createClient } from "@/lib/supabase/client";
+import { uploadKycDocument } from "@/lib/upload";
 
 export default function KycSelfiePage() {
   const { t } = useT();
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const user = useUser();
-  const submitKyc = useAuthStore((s) => s.submitKyc);
 
   const [selfie, setSelfie] = useState("");
   const [cameraOn, setCameraOn] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const objUrlRef = useRef<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const blobRef = useRef<Blob | null>(null);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -72,6 +76,7 @@ export default function KycSelfiePage() {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     setSelfie(canvas.toDataURL("image/jpeg", 0.85));
+    canvas.toBlob((b) => (blobRef.current = b), "image/jpeg", 0.85);
     stopCamera();
   };
 
@@ -80,6 +85,7 @@ export default function KycSelfiePage() {
     if (objUrlRef.current) URL.revokeObjectURL(objUrlRef.current);
     const url = URL.createObjectURL(file);
     objUrlRef.current = url;
+    blobRef.current = file;
     setSelfie(url);
   };
 
@@ -88,15 +94,42 @@ export default function KycSelfiePage() {
       URL.revokeObjectURL(objUrlRef.current);
       objUrlRef.current = "";
     }
+    blobRef.current = null;
     setSelfie("");
   };
 
-  const submit = () => {
-    submitKyc();
-    router.push("/kyc/pending");
+  const submit = async () => {
+    if (!user || !blobRef.current || submitting) return;
+    const front = sessionStorage.getItem("eb-kyc-nid-front");
+    const back = sessionStorage.getItem("eb-kyc-nid-back");
+    if (!front || !back) {
+      router.replace("/kyc/upload");
+      return;
+    }
+    setSubmitting(true);
+    setErr("");
+    try {
+      const selfieFile = new File([blobRef.current], "selfie.jpg", { type: "image/jpeg" });
+      const selfiePath = await uploadKycDocument(selfieFile, user.id, "selfie");
+      const supabase = createClient();
+      const { error } = await supabase.rpc("submit_kyc", {
+        p_front: front,
+        p_back: back,
+        p_selfie: selfiePath,
+      });
+      if (error) throw error;
+      sessionStorage.removeItem("eb-kyc-nid-front");
+      sessionStorage.removeItem("eb-kyc-nid-back");
+      await useAuthStore.getState().refresh();
+      router.push("/kyc/pending");
+    } catch (e) {
+      setSubmitting(false);
+      setErr(e instanceof Error ? e.message : "Submit failed");
+    }
   };
 
-  if (!hydrated || !user || user.kycStatus !== "NONE") return null;
+  if (!hydrated || !user || (user.kycStatus !== "NONE" && user.kycStatus !== "REJECTED"))
+    return null;
 
   return (
     <div className="card" style={{ padding: "30px 28px", borderRadius: 22 }}>

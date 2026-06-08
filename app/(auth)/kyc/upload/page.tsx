@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
-import { useAuthStore, useAuthHydrated, useUser } from "@/store/authStore";
+import { useAuthHydrated, useUser } from "@/store/authStore";
 import { ImageDrop } from "@/components/ui/ImageDrop";
 import { KycSteps } from "@/components/kyc/KycSteps";
 import { Icon } from "@/components/brand/Icon";
+import { uploadKycDocument } from "@/lib/upload";
 
 export default function KycUploadPage() {
   const { t } = useT();
@@ -15,6 +16,21 @@ export default function KycUploadPage() {
   const user = useUser();
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
+  const [frontPath, setFrontPath] = useState("");
+  const [backPath, setBackPath] = useState("");
+  const [err, setErr] = useState("");
+
+  const upload = async (file: File, purpose: "nid-front" | "nid-back") => {
+    if (!user) return;
+    try {
+      const path = await uploadKycDocument(file, user.id, purpose);
+      sessionStorage.setItem(`eb-kyc-${purpose}`, path);
+      if (purpose === "nid-front") setFrontPath(path);
+      else setBackPath(path);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Upload failed");
+    }
+  };
 
   useEffect(() => {
     if (!hydrated) return;
@@ -27,9 +43,10 @@ export default function KycUploadPage() {
     }
   }, [hydrated, user, router]);
 
-  if (!hydrated || !user || user.kycStatus !== "NONE") return null;
+  if (!hydrated || !user || (user.kycStatus !== "NONE" && user.kycStatus !== "REJECTED"))
+    return null;
 
-  const ready = Boolean(front && back);
+  const ready = Boolean(frontPath && backPath);
 
   return (
     <div className="card" style={{ padding: "30px 28px", borderRadius: 22 }}>
@@ -45,16 +62,29 @@ export default function KycUploadPage() {
           hint={t("kyc.dropHint")}
           removeLabel={t("kyc.remove")}
           value={front}
-          onChange={setFront}
+          onChange={(u) => {
+            setFront(u);
+            if (!u) setFrontPath("");
+          }}
+          onFile={(f) => upload(f, "nid-front")}
         />
         <ImageDrop
           label={t("kyc.back")}
           hint={t("kyc.dropHint")}
           removeLabel={t("kyc.remove")}
           value={back}
-          onChange={setBack}
+          onChange={(u) => {
+            setBack(u);
+            if (!u) setBackPath("");
+          }}
+          onFile={(f) => upload(f, "nid-back")}
         />
       </div>
+      {err && (
+        <p role="alert" style={{ color: "var(--crimson)", fontSize: 13, marginTop: 12 }}>
+          {err}
+        </p>
+      )}
 
       <details style={{ marginTop: 18 }}>
         <summary

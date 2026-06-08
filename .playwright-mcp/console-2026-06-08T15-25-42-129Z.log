@@ -1,0 +1,5 @@
+[    1533ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://doorstepfix-ten.vercel.app/api?resource=config:0
+[    1534ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://doorstepfix-ten.vercel.app/api?resource=devices:0
+[   44100ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://doorstepfix-ten.vercel.app/admin:0
+[   47958ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://doorstepfix-ten.vercel.app/admin.html:0
+[  896853ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://doorstepfix-ten.vercel.app/admin.html:0

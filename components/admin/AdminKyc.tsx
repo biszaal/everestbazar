@@ -1,24 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
 import { useAuthHydrated, useUser } from "@/store/authStore";
-import { isAdmin, PENDING_KYC, type KycApplication } from "@/lib/admin";
+import { isAdmin } from "@/lib/admin";
 import { formatRelative } from "@/lib/format";
 import type { StringKey } from "@/lib/i18n";
+
+interface Application {
+  id: string;
+  name: string | null;
+  email: string | null;
+  submittedAt: string;
+  front: string | null;
+  back: string | null;
+  selfie: string | null;
+}
 
 export function AdminKyc() {
   const { t, lang } = useT();
   const hydrated = useAuthHydrated();
   const user = useUser();
-  const [apps, setApps] = useState<KycApplication[]>(PENDING_KYC);
+  const [apps, setApps] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
   const [notice, setNotice] = useState("");
+
+  const admin = isAdmin(user?.id);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    fetch("/api/admin/kyc")
+      .then((r) => (r.ok ? r.json() : { applications: [] }))
+      .then((d) => setApps(d.applications ?? []))
+      .catch(() => setApps([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (hydrated && admin) load();
+    else if (hydrated) setLoading(false);
+  }, [hydrated, admin, load]);
 
   if (!hydrated) return null;
 
-  if (!isAdmin(user?.phone)) {
+  if (!admin) {
     return (
       <div className="wrap" style={{ padding: "70px 28px", maxWidth: 440, textAlign: "center" }}>
         <div className="card" style={{ padding: "36px 30px", borderRadius: 22 }}>
@@ -32,10 +59,15 @@ export function AdminKyc() {
     );
   }
 
-  const act = (id: string, kind: "approve" | "reject") => {
-    setApps((list) => list.filter((a) => a.id !== id));
-    setNotice(`${kind === "approve" ? t("ad.approved") : t("ad.rejected")} · ${t("ad.notify")}`);
+  const act = async (userId: string, action: "approve" | "reject", reason?: string) => {
+    await fetch("/api/admin/kyc", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, action, reason }),
+    });
+    setNotice(`${action === "approve" ? t("ad.approved") : t("ad.rejected")} · ${t("ad.notify")}`);
     setTimeout(() => setNotice(""), 3500);
+    load();
   };
 
   return (
@@ -64,10 +96,14 @@ export function AdminKyc() {
         </div>
       )}
 
-      {apps.length === 0 ? (
-        <p style={{ color: "var(--ink-soft)", textAlign: "center", padding: "60px 0" }}>
-          {t("ad.none")}
-        </p>
+      {loading ? (
+        <div style={{ display: "grid", gap: 16, marginTop: 22 }}>
+          {[0, 1].map((i) => (
+            <div key={i} className="card" style={{ height: 160, background: "var(--paper-2)", border: "1px solid var(--line)" }} />
+          ))}
+        </div>
+      ) : apps.length === 0 ? (
+        <p style={{ color: "var(--ink-soft)", textAlign: "center", padding: "60px 0" }}>{t("ad.none")}</p>
       ) : (
         <div style={{ display: "grid", gap: 16, marginTop: 22 }}>
           {apps.map((a) => (
@@ -85,13 +121,18 @@ function ApplicationCard({
   t,
   onAct,
 }: {
-  app: KycApplication;
+  app: Application;
   lang: "en" | "ne";
   t: (k: StringKey) => string;
-  onAct: (id: string, kind: "approve" | "reject") => void;
+  onAct: (id: string, action: "approve" | "reject", reason?: string) => void;
 }) {
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
+  const docs: [StringKey, string | null][] = [
+    ["ad.nidFront", app.front],
+    ["ad.nidBack", app.back],
+    ["ad.selfie", app.selfie],
+  ];
 
   return (
     <div className="card" style={{ padding: "18px 20px" }}>
@@ -109,49 +150,42 @@ function ApplicationCard({
             flex: "0 0 auto",
           }}
         >
-          {app.name[0]}
+          {(app.name ?? "?").charAt(0)}
         </span>
         <div style={{ flex: 1, minWidth: 160 }}>
-          <strong style={{ fontFamily: "var(--display)", fontSize: 16 }}>{app.name}</strong>
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", fontFamily: "var(--mono)" }}>
-            {app.phone}
-          </div>
+          <strong style={{ fontFamily: "var(--display)", fontSize: 16 }}>{app.name ?? "—"}</strong>
+          <div style={{ fontSize: 13, color: "var(--ink-soft)", fontFamily: "var(--mono)" }}>{app.email}</div>
         </div>
         <span style={{ fontSize: 12.5, color: "var(--ink-soft)" }}>
           {t("ad.submitted")} {formatRelative(app.submittedAt, lang)}
         </span>
       </div>
 
-      {/* document placeholders */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginTop: 14 }}>
-        {([["ad.nidFront", 28], ["ad.nidBack", 50], ["ad.selfie", 86]] as [StringKey, number][]).map(
-          ([label, hue]) => (
-            <div
-              key={label}
-              style={{
-                borderRadius: 10,
-                overflow: "hidden",
-                border: "1px solid var(--line)",
-                background: `oklch(0.92 0.03 ${hue})`,
-                height: 84,
-                display: "grid",
-                placeItems: "center",
-                textAlign: "center",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 11.5,
-                  fontFamily: "var(--mono)",
-                  color: "var(--ink-soft)",
-                  padding: "0 6px",
-                }}
-              >
-                {t(label)}
-              </span>
-            </div>
-          )
-        )}
+        {docs.map(([label, src]) => (
+          <a
+            key={label}
+            href={src ?? undefined}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              borderRadius: 10,
+              overflow: "hidden",
+              border: "1px solid var(--line)",
+              background: "var(--paper-2)",
+              height: 90,
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            {src ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={src} alt={t(label)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <span style={{ fontSize: 11.5, fontFamily: "var(--mono)", color: "var(--ink-soft)" }}>{t(label)}</span>
+            )}
+          </a>
+        ))}
       </div>
 
       {rejecting ? (
@@ -170,7 +204,7 @@ function ApplicationCard({
             <button
               type="button"
               className="btn btn-sm"
-              onClick={() => onAct(app.id, "reject")}
+              onClick={() => onAct(app.id, "reject", reason)}
               style={{ background: "var(--crimson)", color: "var(--paper)", flex: 1 }}
             >
               {t("ad.reject")}

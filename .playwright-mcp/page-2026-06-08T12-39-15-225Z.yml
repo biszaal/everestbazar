@@ -1,0 +1,28 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e9]:
+      - link "EverestBazar — home" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - img [ref=e11]
+        - generic [ref=e14]: EverestBazar
+      - group "Language" [ref=e15]:
+        - button "EN" [pressed] [ref=e16] [cursor=pointer]
+        - button "ने" [ref=e17] [cursor=pointer]
+    - generic [ref=e20]:
+      - heading "Enter your code" [level=1] [ref=e21]
+      - paragraph [ref=e22]:
+        - text: Sent to
+        - strong [ref=e23]: biszaal@yahoo.com
+      - generic [ref=e25]:
+        - textbox "Digit 1" [active] [ref=e26]
+        - textbox "Digit 2" [ref=e27]
+        - textbox "Digit 3" [ref=e28]
+        - textbox "Digit 4" [ref=e29]
+        - textbox "Digit 5" [ref=e30]
+        - textbox "Digit 6" [ref=e31]
+        - textbox "Digit 7" [ref=e32]
+        - textbox "Digit 8" [ref=e33]
+      - paragraph [ref=e34]: Enter the code from your email.
+      - generic [ref=e36]: Resend in 45s
+      - button "Use a different email" [ref=e38] [cursor=pointer]
+  - alert [ref=e39]

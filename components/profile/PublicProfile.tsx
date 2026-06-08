@@ -5,14 +5,16 @@ import { Icon } from "@/components/brand/Icon";
 import { TrustScore } from "@/components/user/TrustScore";
 import { ListingCard } from "@/components/listing/ListingCard";
 import { ReviewItem } from "@/components/user/Review";
-import type { SellerProfile } from "@/lib/catalog";
+import type { UiListing, UiSeller } from "@/lib/adapters";
 import type { Review } from "@/lib/reviews";
 
 export function PublicProfile({
   seller,
+  listings,
   reviews,
 }: {
-  seller: SellerProfile;
+  seller: Pick<UiSeller, "name" | "initial" | "verified" | "trust" | "sales" | "since">;
+  listings: UiListing[];
   reviews: Review[];
 }) {
   const { t } = useT();
@@ -55,7 +57,7 @@ export function PublicProfile({
       {/* active listings */}
       <section style={{ marginTop: 36 }}>
         <h2 style={{ fontSize: 22 }}>{t("pf.activeListings")}</h2>
-        {seller.listings.length === 0 ? (
+        {listings.length === 0 ? (
           <p style={{ color: "var(--ink-soft)", marginTop: 14 }}>{t("pf.noListings")}</p>
         ) : (
           <div
@@ -67,7 +69,7 @@ export function PublicProfile({
               marginTop: 18,
             }}
           >
-            {seller.listings.map((it) => (
+            {listings.map((it) => (
               <ListingCard key={it.id} it={it} condition={it.condition} />
             ))}
           </div>

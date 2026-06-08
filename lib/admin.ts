@@ -2,10 +2,11 @@
    Real check is a Cognito group / ADMIN env. For the demo, sign in with one of
    these phones (OTP 123456) to access /admin/kyc. */
 
-export const ADMIN_PHONES = ["+9779800000000"];
-
-export function isAdmin(phone: string | undefined | null): boolean {
-  return !!phone && ADMIN_PHONES.includes(phone);
+/** Client-side UI gate only. Real admin operations must re-check server-side
+ *  with the service role. Set NEXT_PUBLIC_ADMIN_USER_ID to your Supabase user id. */
+export function isAdmin(userId: string | undefined | null): boolean {
+  const admin = process.env.NEXT_PUBLIC_ADMIN_USER_ID;
+  return !!userId && !!admin && userId === admin;
 }
 
 export interface KycApplication {

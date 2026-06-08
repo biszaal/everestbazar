@@ -11,28 +11,37 @@ export default function KycPendingPage() {
   const router = useRouter();
   const hydrated = useAuthHydrated();
   const user = useUser();
-  const approveKyc = useAuthStore((s) => s.approveKyc);
-  const [approving, setApproving] = useState(false);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     if (!hydrated) return;
     if (!user) router.replace("/login?redirect=/sell");
-    else if (user.kycStatus === "NONE") router.replace("/kyc/upload");
+    else if (user.kycStatus === "NONE" || user.kycStatus === "REJECTED")
+      router.replace("/kyc/upload");
   }, [hydrated, user, router]);
+
+  // pull the latest status once on mount (admin may have approved)
+  useEffect(() => {
+    if (hydrated && user?.kycStatus === "PENDING") {
+      void useAuthStore.getState().refresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   if (!hydrated || !user) return null;
 
   const verified = user.kycStatus === "VERIFIED";
 
-  const approve = () => {
-    setApproving(true);
-    // simulate review latency, then approve and continue
-    setTimeout(() => {
-      approveKyc();
+  const checkStatus = async () => {
+    setChecking(true);
+    await useAuthStore.getState().refresh();
+    setChecking(false);
+    const kyc = useAuthStore.getState().user?.kycStatus;
+    if (kyc === "VERIFIED") {
       const redirect = sessionStorage.getItem("eb-redirect");
       sessionStorage.removeItem("eb-redirect");
       router.push(redirect || "/listing/new");
-    }, 900);
+    }
   };
 
   return (
@@ -58,9 +67,7 @@ export default function KycPendingPage() {
         )}
       </div>
 
-      <h1 style={{ fontSize: 25 }}>
-        {verified ? t("sell.successT") : t("kyc.pendingTitle")}
-      </h1>
+      <h1 style={{ fontSize: 25 }}>{verified ? t("sell.successT") : t("kyc.pendingTitle")}</h1>
       <p
         style={{
           color: "var(--ink-2)",
@@ -75,55 +82,15 @@ export default function KycPendingPage() {
 
       <div style={{ display: "grid", gap: 10, marginTop: 26 }}>
         {verified ? (
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => router.push("/listing/new")}
-          >
+          <button type="button" className="btn btn-primary" onClick={() => router.push("/listing/new")}>
             {t("sell.listNow")} <Icon name="arrow" size={18} sw={2.2} />
           </button>
         ) : (
-          <>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={approve}
-              disabled={approving}
-            >
-              {approving ? (
-                <Spinner />
-              ) : (
-                <>
-                  {t("kyc.demoApprove")} <Icon name="check" size={18} sw={2.4} />
-                </>
-              )}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => router.push("/browse")}
-            >
-              {t("kyc.goBrowse")}
-            </button>
-          </>
+          <button type="button" className="btn btn-primary" onClick={checkStatus} disabled={checking}>
+            {checking ? t("co.processing") : t("kyc.goBrowse")} <Icon name="arrow" size={18} sw={2.2} />
+          </button>
         )}
       </div>
     </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <span
-      className="eb-spin"
-      style={{
-        width: 18,
-        height: 18,
-        borderRadius: 999,
-        border: "2px solid rgba(246,240,230,0.4)",
-        borderTopColor: "var(--paper)",
-        display: "inline-block",
-      }}
-    />
   );
 }

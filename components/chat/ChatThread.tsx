@@ -5,41 +5,90 @@ import { useEffect, useRef, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
 import { rs } from "@/lib/format";
+import { useUser, useAuthHydrated } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
 import {
-  useChatStore,
-  useChatHydrated,
-  type ChatMsg,
-} from "@/store/chatStore";
+  getConversation,
+  getMessages,
+  sendMessage,
+  sendOffer,
+  adaptMessage,
+  type ChatConvo,
+  type ChatMessage,
+} from "@/lib/data";
 import type { StringKey } from "@/lib/i18n";
-
-const CANNED_REPLY = "Sounds good — let's arrange it safely through escrow.";
 
 export function ChatThread({ chatId }: { chatId: string }) {
   const { t, lang } = useT();
-  const hydrated = useChatHydrated();
-  const convo = useChatStore((s) => s.convos.find((c) => c.id === chatId));
-  const messages = useChatStore((s) => s.messages[chatId] ?? []);
-  const send = useChatStore((s) => s.send);
-  const pushReply = useChatStore((s) => s.pushReply);
-  const sendOffer = useChatStore((s) => s.sendOffer);
-  const respondOffer = useChatStore((s) => s.respondOffer);
+  const hydrated = useAuthHydrated();
+  const user = useUser();
 
+  const [convo, setConvo] = useState<ChatConvo | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [text, setText] = useState("");
   const [blockedFlash, setBlockedFlash] = useState(false);
   const [offerOpen, setOfferOpen] = useState(false);
   const [offerAmt, setOfferAmt] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const replyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // load + subscribe to realtime inserts
+  useEffect(() => {
+    if (!hydrated || !user) {
+      if (hydrated) setLoaded(true);
+      return;
+    }
+    const supabase = createClient();
+    const uid = user.id;
+    let alive = true;
+    Promise.all([
+      getConversation(supabase, chatId, uid),
+      getMessages(supabase, chatId, uid),
+    ]).then(([c, m]) => {
+      if (!alive) return;
+      setConvo(c);
+      setMessages(m);
+      setLoaded(true);
+    });
+
+    const channel = supabase
+      .channel(`messages:${chatId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${chatId}` },
+        (payload) => {
+          const msg = adaptMessage(payload.new as never, uid);
+          setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      alive = false;
+      supabase.removeChannel(channel);
+    };
+  }, [hydrated, user, chatId]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages.length]);
 
-  useEffect(() => () => {
-    if (replyTimer.current) clearTimeout(replyTimer.current);
-  }, []);
+  if (hydrated && !user) {
+    return (
+      <div className="wrap" style={{ padding: "70px 28px", maxWidth: 440, textAlign: "center" }}>
+        <div className="card" style={{ padding: "36px 30px", borderRadius: 22 }}>
+          <Icon name="lock" size={36} stroke="var(--crimson)" />
+          <h1 style={{ fontSize: 22, marginTop: 14 }}>{t("pf.loginNeeded")}</h1>
+          <Link href={`/login?redirect=/chat/${chatId}`} className="btn btn-primary" style={{ marginTop: 18 }}>
+            {t("nav.login")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-  if (!hydrated) return null;
+  if (!loaded || !user) return null;
+
   if (!convo) {
     return (
       <div className="wrap" style={{ padding: "60px 28px", textAlign: "center" }}>
@@ -51,25 +100,32 @@ export function ChatThread({ chatId }: { chatId: string }) {
     );
   }
 
-  const submit = () => {
+  const submit = async () => {
     const value = text.trim();
     if (!value) return;
-    const { blocked } = send(chatId, value);
     setText("");
+    const { blocked } = await sendMessage(createClient(), chatId, value, user.id);
     if (blocked) {
       setBlockedFlash(true);
       setTimeout(() => setBlockedFlash(false), 2200);
-      return;
     }
-    replyTimer.current = setTimeout(() => pushReply(chatId, CANNED_REPLY), 1300);
   };
 
-  const submitOffer = () => {
+  const submitOffer = async () => {
     const amt = Number(offerAmt);
     if (!amt) return;
-    sendOffer(chatId, amt);
     setOfferAmt("");
     setOfferOpen(false);
+    await sendOffer(createClient(), chatId, amt, user.id);
+  };
+
+  const respondOffer = async (accept: boolean) => {
+    await createClient().from("messages").insert({
+      conversation_id: chatId,
+      sender_id: user.id,
+      content: accept ? "__OFFER_ACCEPTED__" : "__OFFER_DECLINED__",
+      type: "SYSTEM",
+    });
   };
 
   return (
@@ -106,10 +162,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
             )}
           </div>
           {convo.listingId && (
-            <Link
-              href={`/listing/${convo.listingId}`}
-              style={{ fontSize: 13, color: "var(--crimson)", fontWeight: 600 }}
-            >
+            <Link href={`/listing/${convo.listingId}`} style={{ fontSize: 13, color: "var(--crimson)", fontWeight: 600 }}>
               {t("ch.viewListing")}
             </Link>
           )}
@@ -131,21 +184,12 @@ export function ChatThread({ chatId }: { chatId: string }) {
         }}
       >
         {messages.map((m) => (
-          <Bubble
-            key={m.id}
-            msg={m}
-            lang={lang}
-            t={t}
-            listingId={convo.listingId}
-            onRespond={(accept) => respondOffer(chatId, m.id, accept)}
-          />
+          <Bubble key={m.id} msg={m} lang={lang} t={t} listingId={convo.listingId} onRespond={respondOffer} />
         ))}
       </div>
 
       {blockedFlash && (
-        <p style={{ color: "var(--crimson)", fontSize: 13, marginTop: 8, textAlign: "center" }}>
-          {t("ch.blocked")}
-        </p>
+        <p style={{ color: "var(--crimson)", fontSize: 13, marginTop: 8, textAlign: "center" }}>{t("ch.blocked")}</p>
       )}
 
       {/* input */}
@@ -154,12 +198,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
           type="button"
           className="btn btn-sm"
           onClick={() => setOfferOpen(true)}
-          style={{
-            background: "color-mix(in oklab, var(--gold) 18%, var(--paper))",
-            color: "var(--amber-deep, #8a6a1f)",
-            flex: "0 0 auto",
-            fontWeight: 600,
-          }}
+          style={{ background: "color-mix(in oklab, var(--gold) 18%, var(--paper))", color: "var(--terracotta)", flex: "0 0 auto", fontWeight: 600 }}
         >
           {t("ch.makeOffer")}
         </button>
@@ -169,7 +208,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              submit();
+              void submit();
             }
           }}
           rows={1}
@@ -177,13 +216,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
           className="eb-input"
           style={{ resize: "none", flex: 1, maxHeight: 100 }}
         />
-        <button
-          type="button"
-          onClick={submit}
-          aria-label="Send"
-          className="btn btn-primary"
-          style={{ flex: "0 0 auto", padding: "13px 16px" }}
-        >
+        <button type="button" onClick={submit} aria-label="Send" className="btn btn-primary" style={{ flex: "0 0 auto", padding: "13px 16px" }}>
           <Icon name="arrow" size={18} sw={2.4} />
         </button>
       </div>
@@ -194,32 +227,15 @@ export function ChatThread({ chatId }: { chatId: string }) {
           role="dialog"
           aria-modal="true"
           onClick={() => setOfferOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(33,27,22,0.4)",
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            zIndex: 80,
-          }}
+          style={{ position: "fixed", inset: 0, background: "rgba(33,27,22,0.4)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 80 }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "var(--paper)",
-              borderRadius: "22px 22px 0 0",
-              padding: "24px 22px calc(28px + env(safe-area-inset-bottom, 0px))",
-              width: "100%",
-              maxWidth: 480,
-              boxShadow: "var(--shadow-lg)",
-            }}
+            style={{ background: "var(--paper)", borderRadius: "22px 22px 0 0", padding: "24px 22px calc(28px + env(safe-area-inset-bottom, 0px))", width: "100%", maxWidth: 480, boxShadow: "var(--shadow-lg)" }}
           >
             <h3 style={{ fontSize: 19 }}>{t("ch.makeOffer")}</h3>
             <label style={{ display: "block", marginTop: 14 }}>
-              <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink-2)" }}>
-                {t("ch.yourOffer")} (NPR)
-              </span>
+              <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink-2)" }}>{t("ch.yourOffer")} (NPR)</span>
               <input
                 autoFocus
                 value={offerAmt}
@@ -230,12 +246,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
                 style={{ marginTop: 7 }}
               />
             </label>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={submitOffer}
-              style={{ width: "100%", marginTop: 16 }}
-            >
+            <button type="button" className="btn btn-primary" onClick={submitOffer} style={{ width: "100%", marginTop: 16 }}>
               {t("ch.sendOffer")}
             </button>
           </div>
@@ -252,10 +263,10 @@ function Bubble({
   listingId,
   onRespond,
 }: {
-  msg: ChatMsg;
+  msg: ChatMessage;
   lang: "en" | "ne";
   t: (k: StringKey) => string;
-  listingId?: number;
+  listingId: string | null;
   onRespond: (accept: boolean) => void;
 }) {
   if (msg.type === "SYSTEM") {
@@ -305,14 +316,9 @@ function Bubble({
           <div style={{ fontFamily: "var(--display)", fontWeight: 800, fontSize: 20, color: "var(--ink)", marginTop: 2 }}>
             {rs(msg.offerNPR ?? 0, lang)}
           </div>
-          {!mine && msg.offerStatus === "pending" && (
+          {!mine && (
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-              <button
-                type="button"
-                className="btn btn-sm"
-                onClick={() => onRespond(true)}
-                style={{ background: "var(--green)", color: "var(--paper)" }}
-              >
+              <button type="button" className="btn btn-sm" onClick={() => onRespond(true)} style={{ background: "var(--green)", color: "var(--paper)" }}>
                 {tt("ch.accept")}
               </button>
               <button
@@ -325,12 +331,9 @@ function Bubble({
               </button>
             </div>
           )}
-          {msg.offerStatus === "accepted" && (
+          {mine && listingId && (
             <div style={{ marginTop: 10 }}>
-              <Link
-                href={listingId ? `/checkout/${listingId}` : "/browse"}
-                className="btn btn-sm btn-primary"
-              >
+              <Link href={`/checkout/${listingId}`} className="btn btn-sm btn-primary">
                 {tt("ch.proceed")}
               </Link>
             </div>

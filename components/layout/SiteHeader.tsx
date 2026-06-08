@@ -138,7 +138,7 @@ function AccountMenu() {
   }, [open]);
 
   if (!user) return null;
-  const initial = (user.name.trim()[0] ?? user.phone.slice(-1)).toUpperCase();
+  const initial = (user.name.trim()[0] ?? user.email[0] ?? "?").toUpperCase();
   const verified = user.kycStatus === "VERIFIED";
 
   return (
@@ -206,7 +206,7 @@ function AccountMenu() {
               {user.name || t("nav.account")}
             </div>
             <div style={{ fontSize: 13, color: "var(--ink-soft)", fontFamily: "var(--mono)" }}>
-              {user.phone}
+              {user.email}
             </div>
             {verified && (
               <span className="badge badge-verified" style={{ marginTop: 8 }}>
@@ -227,7 +227,7 @@ function AccountMenu() {
           <Link role="menuitem" href="/chat" onClick={() => setOpen(false)} className="eb-menu-item">
             {t("nav.chat")}
           </Link>
-          {isAdmin(user.phone) && (
+          {isAdmin(user.id) && (
             <Link role="menuitem" href="/admin/kyc" onClick={() => setOpen(false)} className="eb-menu-item">
               {t("nav.adminKyc")}
             </Link>

@@ -1,32 +1,43 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
-import { useAuthStore } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
 import { Icon } from "@/components/brand/Icon";
-import { isValidMobileDigits } from "@/lib/validate";
 
 export default function LoginPage() {
   const { t } = useT();
   const router = useRouter();
-  const startLogin = useAuthStore((s) => s.startLogin);
-  const [digits, setDigits] = useState("");
-  const [touched, setTouched] = useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
+  // remember where to return after auth (e.g. /listing/new, /checkout/[id])
   useEffect(() => {
-    const r = new URLSearchParams(window.location.search).get("redirect");
-    if (r) sessionStorage.setItem("eb-redirect", r);
+    const redirect = new URLSearchParams(window.location.search).get("redirect");
+    if (redirect) sessionStorage.setItem("eb-redirect", redirect);
   }, []);
 
-  const valid = isValidMobileDigits(digits);
-  const showError = touched && !valid;
-
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    setTouched(true);
-    if (!valid) return;
-    startLogin("+977" + digits);
+  const submit = async () => {
+    const value = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setError(t("au.errEmail"));
+      return;
+    }
+    setError("");
+    setSending(true);
+    const supabase = createClient();
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email: value,
+      options: { shouldCreateUser: true },
+    });
+    setSending(false);
+    if (otpError) {
+      setError(otpError.message);
+      return;
+    }
+    sessionStorage.setItem("eb-email", value);
     router.push("/verify");
   };
 
@@ -34,87 +45,52 @@ export default function LoginPage() {
     <div className="card" style={{ padding: "34px 30px", borderRadius: 22 }}>
       <span className="eyebrow">{t("sell.eyebrow")}</span>
       <h1 style={{ fontSize: 28, marginTop: 14 }}>{t("au.welcome")}</h1>
-      <p style={{ color: "var(--ink-2)", marginTop: 10, fontSize: 15.5 }}>
-        {t("au.loginSub")}
-      </p>
+      <p style={{ color: "var(--ink-2)", marginTop: 10, fontSize: 15.5 }}>{t("au.loginSub")}</p>
 
-      <form onSubmit={submit} style={{ marginTop: 24 }}>
-        <label style={{ display: "block" }}>
-          <span
-            style={{
-              display: "block",
-              fontSize: 13.5,
-              fontWeight: 600,
-              marginBottom: 7,
-              color: "var(--ink-2)",
-            }}
-          >
-            {t("sell.phone")}
-          </span>
-          <div style={{ display: "flex", alignItems: "stretch" }}>
-            <span
-              style={{
-                display: "grid",
-                placeItems: "center",
-                padding: "0 14px",
-                background: "var(--paper-2)",
-                border: "1px solid var(--line-2)",
-                borderRight: "none",
-                borderRadius: "12px 0 0 12px",
-                fontFamily: "var(--mono)",
-                fontSize: 14,
-                color: "var(--ink-soft)",
-              }}
-            >
-              +977
-            </span>
-            <input
-              value={digits}
-              onChange={(e) => setDigits(e.target.value.replace(/\D/g, "").slice(0, 10))}
-              onBlur={() => setTouched(true)}
-              inputMode="numeric"
-              autoFocus
-              placeholder="98XXXXXXXX"
-              aria-invalid={showError}
-              className="eb-input"
-              style={{
-                borderRadius: "0 12px 12px 0",
-                borderColor: showError ? "var(--crimson)" : "var(--line-2)",
-              }}
-            />
-          </div>
-          {showError && (
-            <span
-              role="alert"
-              style={{
-                display: "block",
-                color: "var(--crimson)",
-                fontSize: 12.5,
-                marginTop: 6,
-              }}
-            >
-              {t("sell.errPhone")}
-            </span>
-          )}
-        </label>
-
-        <button
-          type="submit"
-          className="btn btn-primary"
-          style={{ width: "100%", marginTop: 18 }}
+      <label style={{ display: "block", marginTop: 24 }}>
+        <span
+          style={{
+            display: "block",
+            fontSize: 13.5,
+            fontWeight: 600,
+            marginBottom: 7,
+            color: "var(--ink-2)",
+          }}
         >
-          {t("au.sendOtp")} <Icon name="arrow" size={18} sw={2.2} />
-        </button>
-      </form>
+          {t("au.emailLabel")}
+        </span>
+        <input
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
+          placeholder={t("au.emailPh")}
+          aria-invalid={!!error}
+          className="eb-input"
+          style={{ borderColor: error ? "var(--crimson)" : "var(--line-2)" }}
+        />
+        {error && (
+          <span role="alert" style={{ display: "block", color: "var(--crimson)", fontSize: 12.5, marginTop: 6 }}>
+            {error}
+          </span>
+        )}
+      </label>
 
-      <p
-        style={{
-          fontSize: 12.5,
-          color: "var(--ink-soft)",
-          marginTop: 18,
-          textAlign: "center",
-        }}
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={submit}
+        disabled={sending}
+        style={{ width: "100%", marginTop: 18, opacity: sending ? 0.7 : 1 }}
       >
+        {sending ? t("co.processing") : t("au.sendOtp")}
+        {!sending && <Icon name="arrow" size={18} sw={2.2} />}
+      </button>
+
+      <p style={{ fontSize: 12.5, color: "var(--ink-soft)", marginTop: 18, textAlign: "center" }}>
         {t("au.terms")}
       </p>
     </div>

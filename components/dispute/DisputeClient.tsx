@@ -8,7 +8,10 @@ import { Icon } from "@/components/brand/Icon";
 import { KycSteps } from "@/components/kyc/KycSteps";
 import { ImageDrop } from "@/components/ui/ImageDrop";
 import { GeoThumb } from "@/components/brand/GeoThumb";
-import { useTxnStore, useTxnHydrated } from "@/store/txnStore";
+import { toSeed } from "@/lib/adapters";
+import { useUser, useAuthHydrated } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
+import { getTransaction, type MyTxn } from "@/lib/data";
 import { rs } from "@/lib/format";
 import type { StringKey } from "@/lib/i18n";
 
@@ -17,9 +20,10 @@ const REASONS: StringKey[] = ["dp.r1", "dp.r2", "dp.r3"];
 export function DisputeClient({ txnId }: { txnId: string }) {
   const { t, lang } = useT();
   const router = useRouter();
-  const hydrated = useTxnHydrated();
-  const txn = useTxnStore((s) => s.txns.find((tx) => tx.id === txnId));
-  const dispute = useTxnStore((s) => s.dispute);
+  const authHydrated = useAuthHydrated();
+  const user = useUser();
+  const [txn, setTxn] = useState<MyTxn | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   const [step, setStep] = useState(0);
   const [reason, setReason] = useState<number | null>(null);
@@ -29,13 +33,24 @@ export function DisputeClient({ txnId }: { txnId: string }) {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!hydrated) return;
-    if (!txn || txn.role !== "buyer" || (txn.status !== "ESCROW_HELD" && !done)) {
+    if (!authHydrated) return;
+    if (!user) {
+      router.replace(`/login?redirect=/dispute/${txnId}`);
+      return;
+    }
+    getTransaction(createClient(), txnId, user.id)
+      .then(setTxn)
+      .finally(() => setLoaded(true));
+  }, [authHydrated, user, txnId, router]);
+
+  useEffect(() => {
+    if (!loaded || done) return;
+    if (!txn || txn.role !== "buyer" || txn.status !== "ESCROW_HELD") {
       router.replace("/purchases");
     }
-  }, [hydrated, txn, router, done]);
+  }, [loaded, txn, router, done]);
 
-  if (!hydrated || !txn) return null;
+  if (!loaded || !txn) return null;
 
   const next = () => {
     if (step === 0) {
@@ -49,8 +64,17 @@ export function DisputeClient({ txnId }: { txnId: string }) {
     }
   };
 
-  const submit = () => {
-    dispute(txn.id);
+  const submit = async () => {
+    const reasonText = reason !== null ? `${t(REASONS[reason])}: ${desc}` : desc;
+    const { error } = await createClient().rpc("open_dispute", {
+      p_txn_id: txn.id,
+      p_reason: reasonText,
+      p_evidence: evidence ? [evidence] : [],
+    });
+    if (error) {
+      setErrors([error.message]);
+      return;
+    }
     setDone(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -92,7 +116,7 @@ export function DisputeClient({ txnId }: { txnId: string }) {
       {/* item ref */}
       <div className="card" style={{ marginTop: 18, padding: 14, display: "flex", gap: 12, alignItems: "center" }}>
         <div style={{ width: 52, height: 52, borderRadius: 10, overflow: "hidden", flex: "0 0 auto" }}>
-          <GeoThumb hue={txn.hue} seed={txn.listingId} height={52} />
+          <GeoThumb hue={txn.hue} seed={toSeed(txn.listingId)} height={52} />
         </div>
         <div style={{ flex: 1 }}>
           <strong style={{ fontFamily: "var(--display)", fontSize: 15 }}>

@@ -1,0 +1,356 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e39]: Browse verified listings | EverestBazar
+  - generic [ref=e40]:
+    - link "Skip to content" [ref=e41] [cursor=pointer]:
+      - /url: "#content"
+    - banner [ref=e42]:
+      - generic [ref=e50]:
+        - link "EverestBazar — home" [ref=e51] [cursor=pointer]:
+          - /url: /
+          - img [ref=e52]
+          - generic [ref=e55]: EverestBazar
+        - navigation [ref=e56]:
+          - link "Browse" [ref=e57] [cursor=pointer]:
+            - /url: /browse
+          - link "How it works" [ref=e58] [cursor=pointer]:
+            - /url: /#how
+          - link "Sell" [ref=e59] [cursor=pointer]:
+            - /url: /sell
+        - generic [ref=e60]:
+          - group "Language" [ref=e61]:
+            - button "EN" [pressed] [ref=e62] [cursor=pointer]
+            - button "ने" [ref=e63] [cursor=pointer]
+          - link "Sell an item" [ref=e64] [cursor=pointer]:
+            - /url: /sell
+          - button "Account" [ref=e66] [cursor=pointer]:
+            - text: B
+            - img [ref=e68]
+    - main [ref=e70]:
+      - generic [ref=e72]:
+        - generic [ref=e73]: Live marketplace
+        - heading "Browse the marketplace" [level=1] [ref=e74]
+        - paragraph [ref=e75]: Every listing is from a verified seller and protected by escrow.
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - img [ref=e79]
+            - textbox "Search “iPhone”, “scooter”, “sofa”…" [ref=e82]
+          - generic [ref=e83]:
+            - generic [ref=e84]: Sort
+            - combobox "Sort" [ref=e85]:
+              - option "Newest" [selected]
+              - 'option "Price: low to high"'
+              - 'option "Price: high to low"'
+      - generic [ref=e86]:
+        - generic [ref=e87]:
+          - button "All" [pressed] [ref=e88] [cursor=pointer]
+          - button "Mobiles" [ref=e89] [cursor=pointer]
+          - button "Electronics" [ref=e90] [cursor=pointer]
+          - button "Vehicles" [ref=e91] [cursor=pointer]
+          - button "Furniture" [ref=e92] [cursor=pointer]
+          - button "Home" [ref=e93] [cursor=pointer]
+          - button "Fashion" [ref=e94] [cursor=pointer]
+        - generic [ref=e95]:
+          - generic [ref=e96]: Condition
+          - button "Like New" [ref=e97] [cursor=pointer]
+          - button "Good" [ref=e98] [cursor=pointer]
+          - button "Fair" [ref=e99] [cursor=pointer]
+          - button "For Parts" [ref=e100] [cursor=pointer]
+          - generic [ref=e101]:
+            - generic [ref=e102]: Max price
+            - combobox "Max price" [ref=e103]:
+              - option "All" [selected]
+              - option "< Rs 25,000"
+              - option "< Rs 50,000"
+              - option "< Rs 1,00,000"
+              - option "< Rs 2,50,000"
+              - option "< Rs 5,00,000"
+          - generic [ref=e104]: 12 results
+        - generic [ref=e105]:
+          - link "iPhone 13 · 128GB Good Escrow iPhone 13 · 128GB Rs 78,000 Baneshwor, KTM Verified 4.7" [ref=e106] [cursor=pointer]:
+            - /url: /listing/cea988c0-573c-4ade-9b53-54cd11bfb3c7
+            - generic [ref=e107]:
+              - img "iPhone 13 · 128GB" [ref=e108]
+              - generic [ref=e110]: Good
+              - generic [ref=e111]:
+                - img [ref=e112]
+                - text: Escrow
+            - generic [ref=e115]:
+              - strong [ref=e116]: iPhone 13 · 128GB
+              - generic [ref=e117]: Rs 78,000
+              - generic [ref=e118]: Baneshwor, KTM
+              - generic [ref=e119]:
+                - generic [ref=e120]:
+                  - img [ref=e121]
+                  - text: Verified
+                - generic [ref=e123]:
+                  - img [ref=e124]
+                  - text: "4.7"
+          - link "Royal Enfield Classic 350 Fair Escrow Royal Enfield Classic 350 Rs 4,25,000 Lakeside, Pokhara Verified 4.8" [ref=e126] [cursor=pointer]:
+            - /url: /listing/ad5bbb18-c9fa-48d5-b151-18db1b262020
+            - generic [ref=e127]:
+              - img "Royal Enfield Classic 350" [ref=e128]
+              - generic [ref=e130]: Fair
+              - generic [ref=e131]:
+                - img [ref=e132]
+                - text: Escrow
+            - generic [ref=e135]:
+              - strong [ref=e136]: Royal Enfield Classic 350
+              - generic [ref=e137]: Rs 4,25,000
+              - generic [ref=e138]: Lakeside, Pokhara
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - img [ref=e141]
+                  - text: Verified
+                - generic [ref=e143]:
+                  - img [ref=e144]
+                  - text: "4.8"
+          - link "Solid wood study table Like New Escrow Solid wood study table Rs 9,500 Patan, Lalitpur Verified 4.8" [ref=e146] [cursor=pointer]:
+            - /url: /listing/08d4b06e-8f05-4f74-bd38-23bedc5f3af1
+            - generic [ref=e147]:
+              - img "Solid wood study table" [ref=e148]
+              - generic [ref=e150]: Like New
+              - generic [ref=e151]:
+                - img [ref=e152]
+                - text: Escrow
+            - generic [ref=e155]:
+              - strong [ref=e156]: Solid wood study table
+              - generic [ref=e157]: Rs 9,500
+              - generic [ref=e158]: Patan, Lalitpur
+              - generic [ref=e159]:
+                - generic [ref=e160]:
+                  - img [ref=e161]
+                  - text: Verified
+                - generic [ref=e163]:
+                  - img [ref=e164]
+                  - text: "4.8"
+          - link "Dell XPS 13 laptop Good Escrow Dell XPS 13 laptop Rs 92,000 Kupondole, LTP Verified 4.9" [ref=e166] [cursor=pointer]:
+            - /url: /listing/651deaf3-9a6d-48d5-bb12-01f0b855b2cf
+            - generic [ref=e167]:
+              - img "Dell XPS 13 laptop" [ref=e168]
+              - generic [ref=e170]: Good
+              - generic [ref=e171]:
+                - img [ref=e172]
+                - text: Escrow
+            - generic [ref=e175]:
+              - strong [ref=e176]: Dell XPS 13 laptop
+              - generic [ref=e177]: Rs 92,000
+              - generic [ref=e178]: Kupondole, LTP
+              - generic [ref=e179]:
+                - generic [ref=e180]:
+                  - img [ref=e181]
+                  - text: Verified
+                - generic [ref=e183]:
+                  - img [ref=e184]
+                  - text: "4.9"
+          - link "Yamaha FZ scooter Fair Escrow Yamaha FZ scooter Rs 2,15,000 Maharajgunj, KTM Verified 4.6" [ref=e186] [cursor=pointer]:
+            - /url: /listing/55de9d90-b64d-4b41-8be8-90a783053b7d
+            - generic [ref=e187]:
+              - img "Yamaha FZ scooter" [ref=e188]
+              - generic [ref=e190]: Fair
+              - generic [ref=e191]:
+                - img [ref=e192]
+                - text: Escrow
+            - generic [ref=e195]:
+              - strong [ref=e196]: Yamaha FZ scooter
+              - generic [ref=e197]: Rs 2,15,000
+              - generic [ref=e198]: Maharajgunj, KTM
+              - generic [ref=e199]:
+                - generic [ref=e200]:
+                  - img [ref=e201]
+                  - text: Verified
+                - generic [ref=e203]:
+                  - img [ref=e204]
+                  - text: "4.6"
+          - link "L-shaped sofa set Like New Escrow L-shaped sofa set Rs 32,000 Bhaktapur Verified 4.7" [ref=e206] [cursor=pointer]:
+            - /url: /listing/6d4a23bc-807d-48ca-baf8-23fd0fb06fc4
+            - generic [ref=e207]:
+              - img "L-shaped sofa set" [ref=e208]
+              - generic [ref=e210]: Like New
+              - generic [ref=e211]:
+                - img [ref=e212]
+                - text: Escrow
+            - generic [ref=e215]:
+              - strong [ref=e216]: L-shaped sofa set
+              - generic [ref=e217]: Rs 32,000
+              - generic [ref=e218]: Bhaktapur
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - img [ref=e221]
+                  - text: Verified
+                - generic [ref=e223]:
+                  - img [ref=e224]
+                  - text: "4.7"
+          - link "Sony A6400 + lens Good Escrow Sony A6400 + lens Rs 1,15,000 Jhamsikhel, LTP Verified 4.8" [ref=e226] [cursor=pointer]:
+            - /url: /listing/001cef3c-3e42-493f-aea8-8a5b3dd171d8
+            - generic [ref=e227]:
+              - img "Sony A6400 + lens" [ref=e228]
+              - generic [ref=e230]: Good
+              - generic [ref=e231]:
+                - img [ref=e232]
+                - text: Escrow
+            - generic [ref=e235]:
+              - strong [ref=e236]: Sony A6400 + lens
+              - generic [ref=e237]: Rs 1,15,000
+              - generic [ref=e238]: Jhamsikhel, LTP
+              - generic [ref=e239]:
+                - generic [ref=e240]:
+                  - img [ref=e241]
+                  - text: Verified
+                - generic [ref=e243]:
+                  - img [ref=e244]
+                  - text: "4.8"
+          - link "3-burner gas stove Fair Escrow 3-burner gas stove Rs 4,200 Chabahil, KTM Verified 4.6" [ref=e246] [cursor=pointer]:
+            - /url: /listing/07adf64d-cd8d-4130-8315-94fd628793fb
+            - generic [ref=e247]:
+              - img "3-burner gas stove" [ref=e248]
+              - generic [ref=e250]: Fair
+              - generic [ref=e251]:
+                - img [ref=e252]
+                - text: Escrow
+            - generic [ref=e255]:
+              - strong [ref=e256]: 3-burner gas stove
+              - generic [ref=e257]: Rs 4,200
+              - generic [ref=e258]: Chabahil, KTM
+              - generic [ref=e259]:
+                - generic [ref=e260]:
+                  - img [ref=e261]
+                  - text: Verified
+                - generic [ref=e263]:
+                  - img [ref=e264]
+                  - text: "4.6"
+          - link "The North Face down jacket Like New Escrow The North Face down jacket Rs 8,800 Thamel, KTM Verified 4.7" [ref=e266] [cursor=pointer]:
+            - /url: /listing/4c609ab6-4e94-413f-8e83-8032d7331739
+            - generic [ref=e267]:
+              - img "The North Face down jacket" [ref=e268]
+              - generic [ref=e270]: Like New
+              - generic [ref=e271]:
+                - img [ref=e272]
+                - text: Escrow
+            - generic [ref=e275]:
+              - strong [ref=e276]: The North Face down jacket
+              - generic [ref=e277]: Rs 8,800
+              - generic [ref=e278]: Thamel, KTM
+              - generic [ref=e279]:
+                - generic [ref=e280]:
+                  - img [ref=e281]
+                  - text: Verified
+                - generic [ref=e283]:
+                  - img [ref=e284]
+                  - text: "4.7"
+          - link "PlayStation 5 + 2 pads Good Escrow PlayStation 5 + 2 pads Rs 68,000 New Road, KTM Verified 4.8" [ref=e286] [cursor=pointer]:
+            - /url: /listing/e33848e6-6e76-4ff7-bb3c-49c582422fcc
+            - generic [ref=e287]:
+              - img "PlayStation 5 + 2 pads" [ref=e288]
+              - generic [ref=e290]: Good
+              - generic [ref=e291]:
+                - img [ref=e292]
+                - text: Escrow
+            - generic [ref=e295]:
+              - strong [ref=e296]: PlayStation 5 + 2 pads
+              - generic [ref=e297]: Rs 68,000
+              - generic [ref=e298]: New Road, KTM
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - img [ref=e301]
+                  - text: Verified
+                - generic [ref=e303]:
+                  - img [ref=e304]
+                  - text: "4.8"
+          - link "Trek mountain bike Fair Escrow Trek mountain bike Rs 46,000 Lakeside, Pokhara Verified 4.8" [ref=e306] [cursor=pointer]:
+            - /url: /listing/0deb9615-27bf-4542-85dc-f427e6f127cb
+            - generic [ref=e307]:
+              - img "Trek mountain bike" [ref=e308]
+              - generic [ref=e310]: Fair
+              - generic [ref=e311]:
+                - img [ref=e312]
+                - text: Escrow
+            - generic [ref=e315]:
+              - strong [ref=e316]: Trek mountain bike
+              - generic [ref=e317]: Rs 46,000
+              - generic [ref=e318]: Lakeside, Pokhara
+              - generic [ref=e319]:
+                - generic [ref=e320]:
+                  - img [ref=e321]
+                  - text: Verified
+                - generic [ref=e323]:
+                  - img [ref=e324]
+                  - text: "4.8"
+          - link "Steel almirah · 3-door Like New Escrow Steel almirah · 3-door Rs 14,500 Koteshwor, KTM Verified 4.9" [ref=e326] [cursor=pointer]:
+            - /url: /listing/3b4de944-faf0-49c0-b9f1-287ba15d9730
+            - generic [ref=e327]:
+              - img "Steel almirah · 3-door" [ref=e328]
+              - generic [ref=e330]: Like New
+              - generic [ref=e331]:
+                - img [ref=e332]
+                - text: Escrow
+            - generic [ref=e335]:
+              - strong [ref=e336]: Steel almirah · 3-door
+              - generic [ref=e337]: Rs 14,500
+              - generic [ref=e338]: Koteshwor, KTM
+              - generic [ref=e339]:
+                - generic [ref=e340]:
+                  - img [ref=e341]
+                  - text: Verified
+                - generic [ref=e343]:
+                  - img [ref=e344]
+                  - text: "4.9"
+    - contentinfo [ref=e346]:
+      - generic [ref=e347]:
+        - generic [ref=e348]:
+          - generic [ref=e349]:
+            - link "EverestBazar — home" [ref=e350] [cursor=pointer]:
+              - /url: "#top"
+              - img [ref=e351]
+              - generic [ref=e354]: EverestBazar
+            - paragraph [ref=e355]: Nepal’s highest standard in commerce.
+          - generic [ref=e356]:
+            - generic [ref=e357]: Marketplace
+            - list [ref=e358]:
+              - listitem [ref=e359]:
+                - link "Browse listings" [ref=e360] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e361]:
+                - link "Categories" [ref=e362] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e363]:
+                - link "How escrow works" [ref=e364] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e365]:
+            - generic [ref=e366]: Sell
+            - list [ref=e367]:
+              - listitem [ref=e368]:
+                - link "Become a seller" [ref=e369] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e370]:
+                - link "Seller protection" [ref=e371] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e372]:
+                - link "Fees" [ref=e373] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e374]:
+            - generic [ref=e375]: Trust & Safety
+            - list [ref=e376]:
+              - listitem [ref=e377]:
+                - link "Verification" [ref=e378] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e379]:
+                - link "Dispute resolution" [ref=e380] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e381]:
+                - link "Report fraud" [ref=e382] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e383]:
+            - generic [ref=e384]: Company
+            - list [ref=e385]:
+              - listitem [ref=e386]:
+                - link "About" [ref=e387] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e388]:
+                - link "Careers" [ref=e389] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e390]:
+                - link "Contact" [ref=e391] [cursor=pointer]:
+                  - /url: "#top"
+        - generic [ref=e392]:
+          - generic [ref=e393]: © 2026 EverestBazar. All rights reserved.
+          - generic [ref=e394]: Built in Nepal

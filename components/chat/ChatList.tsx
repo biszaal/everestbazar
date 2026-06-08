@@ -1,47 +1,58 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
-import { useChatStore, useChatHydrated } from "@/store/chatStore";
-import { formatRelative, rs } from "@/lib/format";
+import { useUser, useAuthHydrated } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
+import { getConversations, type ChatConvo } from "@/lib/data";
+import { formatRelative } from "@/lib/format";
 
 export function ChatList() {
   const { t, lang } = useT();
-  const hydrated = useChatHydrated();
-  const convos = useChatStore((s) => s.convos);
-  const messages = useChatStore((s) => s.messages);
+  const hydrated = useAuthHydrated();
+  const user = useUser();
+  const [convos, setConvos] = useState<ChatConvo[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const sorted = [...convos].sort(
-    (a, b) => new Date(b.lastTs).getTime() - new Date(a.lastTs).getTime()
-  );
-
-  const preview = (chatId: string): string => {
-    const list = messages[chatId] ?? [];
-    const last = list[list.length - 1];
-    if (!last) return "";
-    if (last.type === "SYSTEM") {
-      if (last.text === "__BLOCKED__") return t("ch.blocked");
-      if (last.text === "__OFFER_ACCEPTED__") return t("ch.offerAccepted");
-      if (last.text === "__OFFER_DECLINED__") return t("ch.offerDeclined");
-      return last.text;
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!user) {
+      setLoading(false);
+      return;
     }
-    if (last.type === "OFFER") return `${t("ch.offer")}: ${rs(last.offerNPR ?? 0, lang)}`;
-    const body = (last.sender === "me" ? "You: " : "") + last.text;
-    return body.length > 60 ? body.slice(0, 58) + "…" : body;
-  };
+    getConversations(createClient(), user.id)
+      .then(setConvos)
+      .catch(() => setConvos([]))
+      .finally(() => setLoading(false));
+  }, [hydrated, user]);
+
+  if (hydrated && !user) {
+    return (
+      <div className="wrap" style={{ padding: "70px 28px", maxWidth: 440, textAlign: "center" }}>
+        <div className="card" style={{ padding: "36px 30px", borderRadius: 22 }}>
+          <Icon name="lock" size={36} stroke="var(--crimson)" />
+          <h1 style={{ fontSize: 22, marginTop: 14 }}>{t("pf.loginNeeded")}</h1>
+          <Link href="/login?redirect=/chat" className="btn btn-primary" style={{ marginTop: 18 }}>
+            {t("nav.login")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="wrap" style={{ padding: "34px 28px 90px", maxWidth: 680 }}>
       <h1 style={{ fontSize: "clamp(26px,3.4vw,38px)" }}>{t("ch.title")}</h1>
 
-      {!hydrated ? (
+      {loading ? (
         <div style={{ display: "grid", gap: 2, marginTop: 24 }}>
           {[0, 1].map((i) => (
             <div key={i} style={{ height: 76, background: "var(--paper-2)", borderRadius: 12 }} />
           ))}
         </div>
-      ) : sorted.length === 0 ? (
+      ) : convos.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px 0" }}>
           <p style={{ color: "var(--ink-soft)", fontSize: 16 }}>{t("ch.empty")}</p>
           <Link href="/browse" className="btn btn-ghost" style={{ marginTop: 16 }}>
@@ -50,17 +61,11 @@ export function ChatList() {
         </div>
       ) : (
         <div style={{ marginTop: 22, display: "flex", flexDirection: "column" }}>
-          {sorted.map((c) => (
+          {convos.map((c) => (
             <Link
               key={c.id}
               href={`/chat/${c.id}`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-                padding: "14px 6px",
-                borderBottom: "1px solid var(--line)",
-              }}
+              style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 6px", borderBottom: "1px solid var(--line)" }}
             >
               <span
                 style={{
@@ -93,12 +98,14 @@ export function ChatList() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {preview(c.id)}
+                  {c.lastMessage ?? c.listingTitle ?? ""}
                 </div>
               </div>
-              <span style={{ fontSize: 12, color: "var(--ink-soft)", flex: "0 0 auto" }}>
-                {formatRelative(c.lastTs, lang)}
-              </span>
+              {c.lastMessageAt && (
+                <span style={{ fontSize: 12, color: "var(--ink-soft)", flex: "0 0 auto" }}>
+                  {formatRelative(c.lastMessageAt, lang)}
+                </span>
+              )}
             </Link>
           ))}
         </div>

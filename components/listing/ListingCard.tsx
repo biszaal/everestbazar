@@ -6,17 +6,32 @@ import { Icon } from "@/components/brand/Icon";
 import { GeoThumb } from "@/components/brand/GeoThumb";
 import { ConditionBadge } from "@/components/listing/ConditionBadge";
 import { rs } from "@/lib/format";
-import type { DemoListing } from "@/lib/listings";
+import type { Lang } from "@/lib/i18n";
 import type { Condition } from "@/lib/types";
+
+/** Accepts both the static demo listing (numeric id) and the DB-backed UiListing
+ *  (uuid id + explicit seed). Layout is unchanged. */
+export interface ListingCardItem {
+  id: string | number;
+  hue: number;
+  en: string;
+  ne: string;
+  price: number;
+  loc: Record<Lang, string>;
+  rating: number;
+  seed?: number;
+  photoUrls?: string[];
+}
 
 export function ListingCard({
   it,
   condition,
 }: {
-  it: DemoListing;
+  it: ListingCardItem;
   condition?: Condition;
 }) {
   const { t, lang } = useT();
+  const thumbSeed = it.seed ?? (typeof it.id === "number" ? it.id : 1);
   return (
     <Link
       href={`/listing/${it.id}`}
@@ -24,7 +39,17 @@ export function ListingCard({
       style={{ overflow: "hidden", cursor: "pointer", display: "block" }}
     >
       <div style={{ position: "relative" }}>
-        <GeoThumb hue={it.hue} seed={it.id} height={150} />
+        {it.photoUrls && it.photoUrls[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={it.photoUrls[0]}
+            alt={it.en}
+            loading="lazy"
+            style={{ width: "100%", height: 150, objectFit: "cover", display: "block" }}
+          />
+        ) : (
+          <GeoThumb hue={it.hue} seed={thumbSeed} height={150} />
+        )}
         {condition && (
           <span style={{ position: "absolute", top: 10, left: 10 }}>
             <ConditionBadge condition={condition} overlay />

@@ -9,41 +9,36 @@ import { GeoThumb } from "@/components/brand/GeoThumb";
 import { ConditionBadge } from "@/components/listing/ConditionBadge";
 import { ListingCard } from "@/components/listing/ListingCard";
 import { TrustScore } from "@/components/user/TrustScore";
-import { useChatStore } from "@/store/chatStore";
+import { useUser } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
+import { openConversation } from "@/lib/data";
 import { rs } from "@/lib/format";
-import { sellerSlug, type RichListing } from "@/lib/catalog";
+import type { UiListing } from "@/lib/adapters";
 
 export function ListingDetailClient({
   listing,
   related,
 }: {
-  listing: RichListing;
-  related: RichListing[];
+  listing: UiListing;
+  related: UiListing[];
 }) {
   const { t, lang } = useT();
   const router = useRouter();
-  const openOrCreate = useChatStore((s) => s.openOrCreate);
+  const user = useUser();
   const [photo, setPhoto] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
   const desc = listing.description[lang];
   const longDesc = desc.length > 200;
 
-  const messageSeller = () => {
-    const chatId = `l${listing.id}`;
-    openOrCreate(
-      {
-        id: chatId,
-        name: listing.seller.name,
-        verified: listing.seller.verified,
-        listingId: listing.id,
-        listingTitleEn: listing.en,
-        listingTitleNe: listing.ne,
-        hue: listing.hue,
-      },
-      `Hi! Yes, the ${listing.en} is still available. Happy to answer any questions before you pay through escrow.`
-    );
-    router.push(`/chat/${chatId}`);
+  const messageSeller = async () => {
+    if (!user) {
+      router.push(`/login?redirect=/listing/${listing.id}`);
+      return;
+    }
+    if (!listing.seller.id) return; // static/demo listing has no real seller
+    const convId = await openConversation(createClient(), listing.id, listing.seller.id, user.id);
+    if (convId) router.push(`/chat/${convId}`);
   };
 
   return (
@@ -80,7 +75,16 @@ export function ListingDetailClient({
             className="card"
             style={{ overflow: "hidden", borderRadius: 20, position: "relative" }}
           >
-            <GeoThumb hue={listing.hue} seed={listing.photos[photo]} height={420} />
+            {listing.photoUrls.length ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={listing.photoUrls[photo] ?? listing.photoUrls[0]}
+                alt={listing.en}
+                style={{ width: "100%", height: 420, objectFit: "cover", display: "block" }}
+              />
+            ) : (
+              <GeoThumb hue={listing.hue} seed={listing.photos[photo]} height={420} />
+            )}
             <span style={{ position: "absolute", top: 14, left: 14 }}>
               <ConditionBadge condition={listing.condition} overlay />
             </span>
@@ -97,13 +101,13 @@ export function ListingDetailClient({
                 fontFamily: "var(--mono)",
               }}
             >
-              {photo + 1} / {listing.photos.length}
+              {photo + 1} / {(listing.photoUrls.length ? listing.photoUrls : listing.photos).length}
             </span>
           </div>
           <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
-            {listing.photos.map((seed, i) => (
+            {(listing.photoUrls.length ? listing.photoUrls : listing.photos).map((item, i) => (
               <button
-                key={seed}
+                key={i}
                 type="button"
                 onClick={() => setPhoto(i)}
                 aria-label={`${t("ld.photo")} ${i + 1}`}
@@ -119,7 +123,16 @@ export function ListingDetailClient({
                   background: "none",
                 }}
               >
-                <GeoThumb hue={listing.hue} seed={seed} height={56} />
+                {typeof item === "string" ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item}
+                    alt=""
+                    style={{ width: "100%", height: 56, objectFit: "cover", display: "block" }}
+                  />
+                ) : (
+                  <GeoThumb hue={listing.hue} seed={item} height={56} />
+                )}
               </button>
             ))}
           </div>
@@ -231,7 +244,7 @@ export function ListingDetailClient({
                 {listing.seller.sales} {t("ld.sales")} · {t("ld.memberSince")} {listing.seller.since}
               </div>
               <Link
-                href={`/profile/${sellerSlug(listing.seller.name)}`}
+                href={`/profile/${listing.seller.id || listing.seller.slug}`}
                 style={{ fontSize: 13, color: "var(--crimson)", fontWeight: 600, marginTop: 4, display: "inline-block" }}
               >
                 {t("ld.viewProfile")}

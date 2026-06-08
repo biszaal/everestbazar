@@ -1,23 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useT } from "@/components/providers/LanguageProvider";
 import { EscrowStatus } from "@/components/checkout/EscrowStatus";
 import { Icon } from "@/components/brand/Icon";
-import { useTxnStore, useTxnHydrated, sellerPayout } from "@/store/txnStore";
+import { useUser, useAuthHydrated } from "@/store/authStore";
+import { createClient } from "@/lib/supabase/client";
+import { getMyTransactions, type MyTxn } from "@/lib/data";
+import { sellerPayout } from "@/lib/types";
 import { rs } from "@/lib/format";
-import type { TxnRole } from "@/store/txnStore";
 import type { StringKey } from "@/lib/i18n";
 import type { TxnStatus } from "@/lib/types";
 
 type Filter = "all" | "pending" | "completed" | "disputed";
 
-export function TxnDashboard({ role }: { role: TxnRole }) {
+export function TxnDashboard({ role }: { role: "buyer" | "seller" }) {
   const { t, lang } = useT();
-  const hydrated = useTxnHydrated();
-  const txns = useTxnStore((s) => s.txns);
+  const authHydrated = useAuthHydrated();
+  const user = useUser();
+  const [txns, setTxns] = useState<MyTxn[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>("all");
+
+  const load = useCallback(() => {
+    if (!user) return;
+    setLoading(true);
+    getMyTransactions(createClient(), user.id)
+      .then(setTxns)
+      .catch(() => setTxns([]))
+      .finally(() => setLoading(false));
+  }, [user]);
+
+  useEffect(() => {
+    if (authHydrated && user) load();
+    else if (authHydrated && !user) setLoading(false);
+  }, [authHydrated, user, load]);
+
+  if (authHydrated && !user) {
+    return (
+      <div className="wrap" style={{ padding: "70px 28px", maxWidth: 440, textAlign: "center" }}>
+        <div className="card" style={{ padding: "36px 30px", borderRadius: 22 }}>
+          <Icon name="lock" size={36} stroke="var(--crimson)" />
+          <h1 style={{ fontSize: 22, marginTop: 14 }}>{t("pf.loginNeeded")}</h1>
+          <Link href={`/login?redirect=/${role === "buyer" ? "purchases" : "sales"}`} className="btn btn-primary" style={{ marginTop: 18 }}>
+            {t("nav.login")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const mine = txns.filter((tx) => tx.role === role);
   const earnings = mine
@@ -25,7 +57,7 @@ export function TxnDashboard({ role }: { role: TxnRole }) {
     .reduce((sum, tx) => sum + sellerPayout(tx.priceNPR), 0);
 
   const matches = (status: TxnStatus): Filter[] => {
-    if (status === "ESCROW_HELD") return ["all", "pending"];
+    if (status === "ESCROW_HELD" || status === "PENDING_PAYMENT") return ["all", "pending"];
     if (status === "COMPLETED") return ["all", "completed"];
     if (status === "DISPUTED") return ["all", "disputed"];
     return ["all"];
@@ -48,7 +80,7 @@ export function TxnDashboard({ role }: { role: TxnRole }) {
         {t(role === "buyer" ? "dash.purchasesSub" : "dash.salesSub")}
       </p>
 
-      {role === "seller" && hydrated && (
+      {role === "seller" && !loading && (
         <div
           className="card"
           style={{
@@ -68,7 +100,6 @@ export function TxnDashboard({ role }: { role: TxnRole }) {
         </div>
       )}
 
-      {/* filters */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "22px 0 20px" }}>
         {filters.map(({ key, label }) => {
           const on = filter === key;
@@ -95,14 +126,10 @@ export function TxnDashboard({ role }: { role: TxnRole }) {
         })}
       </div>
 
-      {!hydrated ? (
+      {loading ? (
         <div style={{ display: "grid", gap: 14 }}>
           {[0, 1].map((i) => (
-            <div
-              key={i}
-              className="card"
-              style={{ height: 120, background: "var(--paper-2)", border: "1px solid var(--line)" }}
-            />
+            <div key={i} className="card" style={{ height: 120, background: "var(--paper-2)", border: "1px solid var(--line)" }} />
           ))}
         </div>
       ) : list.length === 0 ? (
@@ -115,7 +142,7 @@ export function TxnDashboard({ role }: { role: TxnRole }) {
       ) : (
         <div style={{ display: "grid", gap: 14 }}>
           {list.map((tx) => (
-            <EscrowStatus key={tx.id} txn={tx} />
+            <EscrowStatus key={tx.id} txn={tx} onChanged={load} />
           ))}
         </div>
       )}

@@ -6,42 +6,40 @@ import { useRouter } from "next/navigation";
 import { AppFrame } from "@/components/layout/AppFrame";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
-import { getListing, type RichListing } from "@/lib/catalog";
-import { useChatStore } from "@/store/chatStore";
+import { getListing as getStaticListing } from "@/lib/catalog";
+import { createClient } from "@/lib/supabase/client";
+import { getListingById, openConversation } from "@/lib/data";
+import { adaptStaticListing, isUuid, type UiListing } from "@/lib/adapters";
+import { useUser } from "@/store/authStore";
 import { rs } from "@/lib/format";
 import { buyerTotal } from "@/lib/types";
 
 export default function CheckoutSuccessPage() {
   const { t, lang } = useT();
   const router = useRouter();
-  const openOrCreate = useChatStore((s) => s.openOrCreate);
-  const [listing, setListing] = useState<RichListing | null>(null);
+  const user = useUser();
+  const [listing, setListing] = useState<UiListing | null>(null);
   const [deadline, setDeadline] = useState("");
 
-  const chatWithSeller = () => {
-    if (!listing) {
+  const chatWithSeller = async () => {
+    if (!listing || !user || !listing.seller.id) {
       router.push("/browse");
       return;
     }
-    const chatId = `l${listing.id}`;
-    openOrCreate(
-      {
-        id: chatId,
-        name: listing.seller.name,
-        verified: listing.seller.verified,
-        listingId: listing.id,
-        listingTitleEn: listing.en,
-        listingTitleNe: listing.ne,
-        hue: listing.hue,
-      },
-      `Payment received through escrow — thank you! Let's arrange delivery for the ${listing.en}.`
-    );
-    router.push(`/chat/${chatId}`);
+    const convId = await openConversation(createClient(), listing.id, listing.seller.id, user.id);
+    router.push(convId ? `/chat/${convId}` : "/chat");
   };
 
   useEffect(() => {
-    const id = Number(new URLSearchParams(window.location.search).get("id"));
-    setListing(getListing(id) ?? null);
+    const idParam = new URLSearchParams(window.location.search).get("id") ?? "";
+    (async () => {
+      if (isUuid(idParam)) {
+        setListing(await getListingById(createClient(), idParam));
+      } else {
+        const s = getStaticListing(Number(idParam));
+        setListing(s ? adaptStaticListing(s) : null);
+      }
+    })();
     const d = new Date(Date.now() + 72 * 60 * 60 * 1000);
     setDeadline(
       d.toLocaleString(lang === "ne" ? "ne-NP" : "en-GB", {

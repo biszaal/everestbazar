@@ -1,0 +1,23 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e9]:
+      - link "EverestBazar — home" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - img [ref=e11]
+        - generic [ref=e14]: EverestBazar
+      - group "Language" [ref=e15]:
+        - button "EN" [pressed] [ref=e16] [cursor=pointer]
+        - button "ने" [ref=e17] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]: Become a seller
+      - heading "Welcome to EverestBazar" [level=1] [ref=e22]
+      - paragraph [ref=e23]: Sign in to buy or sell. Enter your email and we'll send a one-time code.
+      - generic [ref=e24]:
+        - generic [ref=e25]: Email
+        - textbox "Email" [active] [ref=e26]:
+          - /placeholder: you@example.com
+      - button "Send code" [ref=e27] [cursor=pointer]:
+        - text: Send code
+        - img [ref=e28]
+      - paragraph [ref=e30]: By continuing you agree to our Terms of Service.
+  - alert [ref=e31]

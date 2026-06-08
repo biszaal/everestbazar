@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
 import { useAuthHydrated, useUser } from "@/store/authStore";
 import { Icon } from "@/components/brand/Icon";
-import { KycSteps } from "@/components/kyc/KycSteps";
 import { rs } from "@/lib/format";
 import { platformFee, sellerPayout, type Condition } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
+import { uploadListingPhoto } from "@/lib/upload";
 import type { ListingCategory } from "@/lib/listings";
 import type { StringKey } from "@/lib/i18n";
 
@@ -23,6 +23,16 @@ const CATEGORIES: ListingCategory[] = [
 const CONDITIONS: Condition[] = ["LIKE_NEW", "GOOD", "FAIR", "FOR_PARTS"];
 const MAX_PHOTOS = 6;
 
+// UI category → DB (category enum + subcategory label)
+const CAT_DB: Record<ListingCategory, { category: string; subcategory: string }> = {
+  mobile: { category: "ELECTRONICS", subcategory: "Mobiles" },
+  electronics: { category: "ELECTRONICS", subcategory: "Electronics" },
+  vehicles: { category: "VEHICLES", subcategory: "Vehicles" },
+  furniture: { category: "FURNITURE", subcategory: "Furniture" },
+  home: { category: "OTHER", subcategory: "Home" },
+  fashion: { category: "FASHION", subcategory: "Fashion" },
+};
+
 export function CreateListingClient() {
   const { t, lang } = useT();
   const router = useRouter();
@@ -36,9 +46,10 @@ export function CreateListingClient() {
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-  const [published, setPublished] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const urlsRef = useRef<string[]>([]);
+  const filesRef = useRef<Map<string, File>>(new Map());
 
   // guard: must be logged in + verified
   useEffect(() => {
@@ -62,6 +73,7 @@ export function CreateListingClient() {
       .map((f) => {
         const url = URL.createObjectURL(f);
         urlsRef.current.push(url);
+        filesRef.current.set(url, f);
         return url;
       });
     setPhotos((p) => [...p, ...incoming]);
@@ -70,70 +82,52 @@ export function CreateListingClient() {
   const removePhoto = (url: string) => {
     URL.revokeObjectURL(url);
     urlsRef.current = urlsRef.current.filter((u) => u !== url);
+    filesRef.current.delete(url);
     setPhotos((p) => p.filter((u) => u !== url));
   };
 
   const priceNum = Number(price) || 0;
 
-  const publish = () => {
+  const publish = async () => {
     const errs: string[] = [];
     if (photos.length < 3) errs.push(t("new.minPhotos"));
     if (!title.trim()) errs.push(t("new.needTitle"));
     if (!priceNum) errs.push(t("new.needPrice"));
     setErrors(errs);
-    if (errs.length) return;
-    // MOCK: a real publish POSTs to /api/listings → Lambda → DynamoDB.
-    setPublished(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    if (errs.length || !user) return;
 
-  if (published) {
-    return (
-      <div className="wrap" style={{ padding: "60px 28px 90px", maxWidth: 560 }}>
-        <div className="card" style={{ padding: "40px 32px", textAlign: "center", borderRadius: 22 }}>
-          <div
-            className="eb-pop"
-            style={{
-              width: 84,
-              height: 84,
-              borderRadius: 999,
-              margin: "0 auto 22px",
-              display: "grid",
-              placeItems: "center",
-              background: "color-mix(in oklab, var(--green) 16%, var(--paper))",
-            }}
-          >
-            <Icon name="check" size={44} sw={2.4} stroke="var(--green)" />
-          </div>
-          <h1 style={{ fontSize: 26 }}>{t("new.published")}</h1>
-          <p style={{ color: "var(--ink-2)", marginTop: 12, fontSize: 15.5 }}>
-            {title || t("new.title")} · {rs(priceNum, lang)}
-          </p>
-          <div style={{ display: "grid", gap: 10, marginTop: 26 }}>
-            <Link href="/browse" className="btn btn-primary">
-              {t("browse.cta")} <Icon name="arrow" size={18} sw={2.2} />
-            </Link>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                setPublished(false);
-                setPhotos([]);
-                urlsRef.current.forEach((u) => URL.revokeObjectURL(u));
-                urlsRef.current = [];
-                setTitle("");
-                setPrice("");
-                setDesc("");
-                setErrors([]);
-              }}
-            >
-              {t("new.title")}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    setPublishing(true);
+    try {
+      const supabase = createClient();
+      const paths: string[] = [];
+      for (const url of photos) {
+        const file = filesRef.current.get(url);
+        if (file) paths.push(await uploadListingPhoto(file));
+      }
+      const meta = CAT_DB[cat];
+      const { data, error } = await supabase
+        .from("listings")
+        .insert({
+          seller_id: user.id,
+          title: title.trim(),
+          description: desc.trim(),
+          category: meta.category,
+          subcategory: meta.subcategory,
+          condition: cond,
+          price_npr: priceNum,
+          photo_paths: paths,
+          city: "Kathmandu",
+          status: "ACTIVE",
+        })
+        .select("id")
+        .single();
+      if (error) throw error;
+      router.push(`/listing/${data.id}`);
+    } catch (e) {
+      setPublishing(false);
+      setErrors([e instanceof Error ? e.message : "Publish failed"]);
+    }
+  };
 
   return (
     <div className="wrap" style={{ padding: "34px 28px 90px", maxWidth: 720 }}>
@@ -363,9 +357,11 @@ export function CreateListingClient() {
         type="button"
         className="btn btn-primary"
         onClick={publish}
-        style={{ width: "100%", marginTop: 22 }}
+        disabled={publishing}
+        style={{ width: "100%", marginTop: 22, opacity: publishing ? 0.7 : 1 }}
       >
-        {t("new.publish")} <Icon name="check" size={18} sw={2.4} />
+        {publishing ? t("co.processing") : t("new.publish")}
+        {!publishing && <Icon name="check" size={18} sw={2.4} />}
       </button>
     </div>
   );

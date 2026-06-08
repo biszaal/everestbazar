@@ -9,9 +9,10 @@ interface ImageDropProps {
   removeLabel: string;
   value: string; // object URL or ""
   onChange: (url: string) => void;
+  onFile?: (file: File) => void;
 }
 
-export function ImageDrop({ label, hint, removeLabel, value, onChange }: ImageDropProps) {
+export function ImageDrop({ label, hint, removeLabel, value, onChange, onFile }: ImageDropProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<string>("");
   const [dragOver, setDragOver] = useState(false);
@@ -28,6 +29,7 @@ export function ImageDrop({ label, hint, removeLabel, value, onChange }: ImageDr
     const url = URL.createObjectURL(file);
     urlRef.current = url;
     onChange(url);
+    onFile?.(file);
   };
 
   const clear = () => {

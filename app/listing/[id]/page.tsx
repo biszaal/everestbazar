@@ -2,37 +2,44 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AppFrame } from "@/components/layout/AppFrame";
 import { ListingDetailClient } from "@/components/listing/ListingDetailClient";
-import { CATALOG, getListing, relatedListings } from "@/lib/catalog";
+import { createClient } from "@/lib/supabase/server";
+import { getListingById, getRelatedListings } from "@/lib/data";
+import { adaptStaticListing, isUuid, type UiListing } from "@/lib/adapters";
+import { getListing as getStaticListing, relatedListings as staticRelated } from "@/lib/catalog";
 import { rs } from "@/lib/format";
 
-export function generateStaticParams() {
-  return CATALOG.map((it) => ({ id: String(it.id) }));
+async function resolve(id: string): Promise<{ listing: UiListing | null; related: UiListing[] }> {
+  if (isUuid(id)) {
+    const sb = createClient();
+    const listing = await getListingById(sb, id);
+    const related = listing ? await getRelatedListings(sb, listing) : [];
+    return { listing, related };
+  }
+  // bridge: legacy numeric id → static catalog
+  const s = getStaticListing(Number(id));
+  if (!s) return { listing: null, related: [] };
+  return { listing: adaptStaticListing(s), related: staticRelated(s).map(adaptStaticListing) };
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { id: string };
-}): Metadata {
-  const listing = getListing(Number(params.id));
+}): Promise<Metadata> {
+  const { listing } = await resolve(params.id);
   if (!listing) return { title: "Listing not found" };
   const title = `${listing.en} — ${rs(listing.price)}`;
   return {
     title,
     description: `${listing.description.en.slice(0, 150)} Verified seller, escrow-protected on EverestBazar.`,
     alternates: { canonical: `/listing/${listing.id}` },
-    openGraph: {
-      title: `${title} | EverestBazar`,
-      description: listing.description.en.slice(0, 150),
-      type: "website",
-    },
+    openGraph: { title: `${title} | EverestBazar`, description: listing.description.en.slice(0, 150), type: "website" },
   };
 }
 
-export default function ListingPage({ params }: { params: { id: string } }) {
-  const listing = getListing(Number(params.id));
+export default async function ListingPage({ params }: { params: { id: string } }) {
+  const { listing, related } = await resolve(params.id);
   if (!listing) notFound();
-  const related = relatedListings(listing);
   return (
     <AppFrame>
       <ListingDetailClient listing={listing} related={related} />

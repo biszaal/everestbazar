@@ -1,0 +1,87 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+      - /url: "#content"
+    - banner [ref=e4]:
+      - generic [ref=e12]:
+        - link "EverestBazar — home" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - img [ref=e14]
+          - generic [ref=e17]: EverestBazar
+        - navigation [ref=e18]:
+          - link "Browse" [ref=e19] [cursor=pointer]:
+            - /url: /browse
+          - link "How it works" [ref=e20] [cursor=pointer]:
+            - /url: /#how
+          - link "Sell" [ref=e21] [cursor=pointer]:
+            - /url: /sell
+        - generic [ref=e22]:
+          - group "Language" [ref=e23]:
+            - button "EN" [pressed] [ref=e24] [cursor=pointer]
+            - button "ने" [ref=e25] [cursor=pointer]
+          - link "Log in" [ref=e26] [cursor=pointer]:
+            - /url: /login
+          - link "Sell an item" [ref=e27] [cursor=pointer]:
+            - /url: /sell
+    - main
+    - contentinfo [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - link "EverestBazar — home" [ref=e32] [cursor=pointer]:
+              - /url: "#top"
+              - img [ref=e33]
+              - generic [ref=e36]: EverestBazar
+            - paragraph [ref=e37]: Nepal’s highest standard in commerce.
+          - generic [ref=e38]:
+            - generic [ref=e39]: Marketplace
+            - list [ref=e40]:
+              - listitem [ref=e41]:
+                - link "Browse listings" [ref=e42] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e43]:
+                - link "Categories" [ref=e44] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e45]:
+                - link "How escrow works" [ref=e46] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e47]:
+            - generic [ref=e48]: Sell
+            - list [ref=e49]:
+              - listitem [ref=e50]:
+                - link "Become a seller" [ref=e51] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e52]:
+                - link "Seller protection" [ref=e53] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e54]:
+                - link "Fees" [ref=e55] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e56]:
+            - generic [ref=e57]: Trust & Safety
+            - list [ref=e58]:
+              - listitem [ref=e59]:
+                - link "Verification" [ref=e60] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e61]:
+                - link "Dispute resolution" [ref=e62] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e63]:
+                - link "Report fraud" [ref=e64] [cursor=pointer]:
+                  - /url: "#top"
+          - generic [ref=e65]:
+            - generic [ref=e66]: Company
+            - list [ref=e67]:
+              - listitem [ref=e68]:
+                - link "About" [ref=e69] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e70]:
+                - link "Careers" [ref=e71] [cursor=pointer]:
+                  - /url: "#top"
+              - listitem [ref=e72]:
+                - link "Contact" [ref=e73] [cursor=pointer]:
+                  - /url: "#top"
+        - generic [ref=e74]:
+          - generic [ref=e75]: © 2026 EverestBazar. All rights reserved.
+          - generic [ref=e76]: Built in Nepal
+  - alert [ref=e83]

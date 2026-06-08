@@ -1,89 +1,89 @@
-/* EverestBazar — client auth store (MOCK).
-   Real auth uses phone OTP → JWT in an httpOnly cookie verified by Lambda.
-   For this front-end build we simulate it: OTP "123456" signs you in, and KYC
-   approval is simulated locally. State is persisted to localStorage by hand so
-   the first server + client render always agree (no hydration mismatch); the
-   `hydrated` flag flips true only after we read storage on mount. */
+/* EverestBazar — auth store, backed by Supabase Auth (email OTP).
+   The Supabase session lives in cookies (managed by @supabase/ssr); this store
+   mirrors the current user + profile into a shape the UI already consumes
+   (useUser / useAuthHydrated / useIsVerified). */
 
 import { create } from "zustand";
+import { createClient } from "@/lib/supabase/client";
 import type { KycStatus, SessionUser } from "@/lib/types";
-
-const STORAGE_KEY = "eb-auth";
-export const DEMO_OTP = "123456";
 
 interface AuthState {
   user: SessionUser | null;
-  pendingPhone: string | null;
   hydrated: boolean;
+  /** Wire up the Supabase session + auth listener (call once, after mount). */
+  init: () => void;
+  refresh: () => Promise<void>;
+  setName: (name: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
 
-  hydrate: () => void;
-  startLogin: (phone: string) => void;
-  verifyOtp: (otp: string) => boolean;
-  setName: (name: string) => void;
-  submitKyc: () => void;
-  approveKyc: () => void;
-  logout: () => void;
+let wired = false;
+
+async function loadUser(
+  set: (partial: Partial<AuthState>) => void,
+  authUser: { id: string; email?: string | null } | null
+) {
+  if (!authUser) {
+    set({ user: null, hydrated: true });
+    return;
+  }
+  const sb = createClient();
+  const { data: profile } = await sb
+    .from("profiles")
+    .select("name, kyc_status")
+    .eq("id", authUser.id)
+    .maybeSingle();
+  set({
+    user: {
+      id: authUser.id,
+      email: authUser.email ?? "",
+      name: profile?.name ?? "",
+      kycStatus: (profile?.kyc_status ?? "NONE") as KycStatus,
+    },
+    hydrated: true,
+  });
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
-  pendingPhone: null,
   hydrated: false,
 
-  hydrate: () => {
-    if (typeof window === "undefined" || get().hydrated) return;
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) set({ user: JSON.parse(raw) as SessionUser });
-    } catch {
-      /* ignore corrupt storage */
-    }
-    set({ hydrated: true });
-  },
-
-  startLogin: (phone) => set({ pendingPhone: phone }),
-
-  verifyOtp: (otp) => {
-    if (otp !== DEMO_OTP) return false;
-    const phone = get().pendingPhone ?? get().user?.phone;
-    if (!phone) return false;
-    const existing = get().user;
-    set({
-      user:
-        existing && existing.phone === phone
-          ? existing
-          : { phone, name: "", kycStatus: "NONE" as KycStatus },
-      pendingPhone: null,
+  init: () => {
+    if (wired || typeof window === "undefined") return;
+    wired = true;
+    const sb = createClient();
+    // onAuthStateChange fires immediately with the current session (INITIAL_SESSION)
+    sb.auth.onAuthStateChange((_event, session) => {
+      void loadUser(set, session?.user ?? null);
     });
-    return true;
+    // safety: if no event arrives, resolve hydration from getUser()
+    sb.auth.getUser().then(({ data }) => {
+      if (!get().hydrated) void loadUser(set, data.user);
+    });
   },
 
-  setName: (name) =>
-    set((s) => (s.user ? { user: { ...s.user, name } } : {})),
+  refresh: async () => {
+    const sb = createClient();
+    const { data } = await sb.auth.getUser();
+    await loadUser(set, data.user);
+  },
 
-  submitKyc: () =>
-    set((s) => (s.user ? { user: { ...s.user, kycStatus: "PENDING" } } : {})),
+  setName: async (name) => {
+    const u = get().user;
+    if (!u) return;
+    const sb = createClient();
+    await sb.from("profiles").update({ name }).eq("id", u.id);
+    set({ user: { ...u, name } });
+  },
 
-  approveKyc: () =>
-    set((s) => (s.user ? { user: { ...s.user, kycStatus: "VERIFIED" } } : {})),
-
-  logout: () => set({ user: null, pendingPhone: null }),
+  logout: async () => {
+    const sb = createClient();
+    await sb.auth.signOut();
+    set({ user: null });
+  },
 }));
 
-// persist `user` to localStorage whenever it changes
-if (typeof window !== "undefined") {
-  useAuthStore.subscribe((state) => {
-    try {
-      if (state.user)
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state.user));
-      else window.localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* storage full / blocked — non-fatal for the demo */
-    }
-  });
-}
-
-/* ---- convenience selectors ---- */
+/* ---- selectors (unchanged API for the UI) ---- */
 export const useUser = () => useAuthStore((s) => s.user);
 export const useAuthHydrated = () => useAuthStore((s) => s.hydrated);
 export const useIsVerified = () =>
