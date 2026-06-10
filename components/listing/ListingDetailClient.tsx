@@ -37,7 +37,7 @@ export function ListingDetailClient({
       return;
     }
     if (!listing.seller.id) return; // static/demo listing has no real seller
-    const convId = await openConversation(createClient(), listing.id, listing.seller.id, user.id);
+    const convId = await openConversation(createClient(), listing.id);
     if (convId) router.push(`/chat/${convId}`);
   };
 

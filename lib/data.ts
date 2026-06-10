@@ -248,28 +248,15 @@ export async function getMessages(sb: SupabaseClient, convId: string, uid: strin
   return ((data ?? []) as unknown as MessageRow[]).map((r) => adaptMessage(r, uid));
 }
 
-/** Find-or-create a conversation for (listing, buyer=me, seller). Returns its id. */
+/** Find-or-create a conversation for a listing. The seller is bound to the
+ *  listing server-side by the open_conversation RPC (client can't spoof it). */
 export async function openConversation(
   sb: SupabaseClient,
-  listingId: string,
-  sellerId: string,
-  uid: string
+  listingId: string
 ): Promise<string | null> {
-  const { data: existing } = await sb
-    .from("conversations")
-    .select("id")
-    .eq("listing_id", listingId)
-    .eq("buyer_id", uid)
-    .eq("seller_id", sellerId)
-    .maybeSingle();
-  if (existing) return existing.id;
-  const { data, error } = await sb
-    .from("conversations")
-    .insert({ listing_id: listingId, buyer_id: uid, seller_id: sellerId })
-    .select("id")
-    .single();
+  const { data, error } = await sb.rpc("open_conversation", { p_listing_id: listingId });
   if (error) return null;
-  return data.id;
+  return (data as string) ?? null;
 }
 
 export async function sendMessage(

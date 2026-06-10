@@ -26,7 +26,7 @@ export default function CheckoutSuccessPage() {
       router.push("/browse");
       return;
     }
-    const convId = await openConversation(createClient(), listing.id, listing.seller.id, user.id);
+    const convId = await openConversation(createClient(), listing.id);
     router.push(convId ? `/chat/${convId}` : "/chat");
   };
 
