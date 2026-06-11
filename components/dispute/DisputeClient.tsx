@@ -7,6 +7,7 @@ import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
 import { KycSteps } from "@/components/kyc/KycSteps";
 import { ImageDrop } from "@/components/ui/ImageDrop";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { GeoThumb } from "@/components/brand/GeoThumb";
 import { toSeed } from "@/lib/adapters";
 import { useUser, useAuthHydrated } from "@/store/authStore";
@@ -50,7 +51,7 @@ export function DisputeClient({ txnId }: { txnId: string }) {
     }
   }, [loaded, txn, router, done]);
 
-  if (!loaded || !txn) return null;
+  if (!loaded || !txn) return <DisputeSkeleton />;
 
   const next = () => {
     if (step === 0) {
@@ -246,6 +247,50 @@ export function DisputeClient({ txnId }: { txnId: string }) {
             </button>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function DisputeSkeleton() {
+  return (
+    <div className="wrap" style={{ padding: "34px 28px 90px", maxWidth: 600 }}>
+      <Skeleton w={220} h={30} />
+
+      {/* item ref */}
+      <div
+        className="card"
+        style={{ marginTop: 18, padding: 14, display: "flex", gap: 12, alignItems: "center" }}
+      >
+        <Skeleton w={52} h={52} r={10} style={{ flex: "0 0 auto" }} />
+        <div style={{ flex: 1, display: "grid", gap: 8 }}>
+          <Skeleton w="55%" h={15} />
+          <Skeleton w="40%" h={13} />
+        </div>
+      </div>
+
+      {/* step indicator */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 24 }}>
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            style={{ display: "flex", alignItems: "center", gap: 10, flex: i < 2 ? 1 : "0 0 auto" }}
+          >
+            <Skeleton w={28} h={28} r={999} style={{ flex: "0 0 auto" }} />
+            {i < 2 && <Skeleton h={3} r={999} style={{ flex: 1 }} />}
+          </div>
+        ))}
+      </div>
+
+      {/* form (reason options) */}
+      <div style={{ marginTop: 26, display: "grid", gap: 14 }}>
+        <Skeleton w="45%" h={18} />
+        <div style={{ display: "grid", gap: 10 }}>
+          {[0, 1, 2].map((i) => (
+            <Skeleton key={i} h={52} r={12} />
+          ))}
+        </div>
+        <Skeleton h={48} r={999} style={{ marginTop: 8 }} />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useAuthHydrated, useUser } from "@/store/authStore";
 import { isAdmin } from "@/lib/admin";
 import { formatRelative } from "@/lib/format";
@@ -99,7 +100,25 @@ export function AdminKyc() {
       {loading ? (
         <div style={{ display: "grid", gap: 16, marginTop: 22 }}>
           {[0, 1].map((i) => (
-            <div key={i} className="card" style={{ height: 160, background: "var(--paper-2)", border: "1px solid var(--line)" }} />
+            <div key={i} className="card" style={{ padding: "18px 20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <Skeleton w={44} h={44} r={999} style={{ flex: "0 0 auto" }} />
+                <div style={{ flex: 1, display: "grid", gap: 8 }}>
+                  <Skeleton w="38%" h={15} />
+                  <Skeleton w="52%" h={12} />
+                </div>
+                <Skeleton w={90} h={12} style={{ flex: "0 0 auto" }} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginTop: 14 }}>
+                {[0, 1, 2].map((j) => (
+                  <Skeleton key={j} h={90} r={10} />
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
+                <Skeleton h={38} r={999} style={{ flex: 1 }} />
+                <Skeleton w={92} h={38} r={999} style={{ flex: "0 0 auto" }} />
+              </div>
+            </div>
           ))}
         </div>
       ) : apps.length === 0 ? (
