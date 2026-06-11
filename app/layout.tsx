@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { AuthHydrator } from "@/components/providers/AuthHydrator";
+import { BrandSplash } from "@/components/layout/BrandSplash";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -92,6 +93,7 @@ export default function RootLayout({
       >
         <LanguageProvider>
           <AuthHydrator />
+          <BrandSplash />
           {children}
         </LanguageProvider>
       </body>

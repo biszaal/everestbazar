@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useT } from "@/components/providers/LanguageProvider";
 import { EscrowStatus } from "@/components/checkout/EscrowStatus";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { Icon } from "@/components/brand/Icon";
 import { useUser, useAuthHydrated } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
@@ -129,7 +130,18 @@ export function TxnDashboard({ role }: { role: "buyer" | "seller" }) {
       {loading ? (
         <div style={{ display: "grid", gap: 14 }}>
           {[0, 1].map((i) => (
-            <div key={i} className="card" style={{ height: 120, background: "var(--paper-2)", border: "1px solid var(--line)" }} />
+            <div
+              key={i}
+              className="card"
+              style={{ display: "flex", gap: 14, padding: 14, alignItems: "center" }}
+            >
+              <Skeleton w={84} h={84} r={12} style={{ flex: "0 0 auto" }} />
+              <div style={{ flex: 1, display: "grid", gap: 9 }}>
+                <Skeleton w="55%" h={15} />
+                <Skeleton w="34%" h={13} />
+                <Skeleton w={128} h={24} r={999} />
+              </div>
+            </div>
           ))}
         </div>
       ) : list.length === 0 ? (

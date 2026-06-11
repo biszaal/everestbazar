@@ -358,6 +358,93 @@ svg {
   will-change: transform;
 }
 
+/* ============================================================
+   loading skeletons (shimmer) + brand splash
+   ============================================================ */
+@keyframes ebShimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.eb-sk {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  background: var(--paper-2);
+  border-radius: 10px;
+}
+.eb-sk::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, var(--paper) 70%, transparent) 45%,
+    color-mix(in oklab, var(--paper) 90%, transparent) 50%,
+    color-mix(in oklab, var(--paper) 70%, transparent) 55%,
+    transparent
+  );
+  animation: ebShimmer 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* full-screen brand loader shown while the app boots */
+.eb-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.eb-splash[data-hide="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.eb-splash-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.eb-splash-bar {
+  position: relative;
+  width: 132px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+.eb-splash-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -42%;
+  width: 42%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--pf-blue),
+    var(--pf-red) 35%,
+    var(--gold) 70%,
+    var(--pf-green)
+  );
+  animation: ebSplashSlide 1.05s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes ebSplashSlide {
+  0% {
+    left: -42%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -366,6 +453,14 @@ svg {
   }
   .eb-float {
     animation: none;
+  }
+  .eb-sk::after {
+    animation: none;
+  }
+  .eb-splash-bar::after {
+    animation: none;
+    left: 0;
+    width: 100%;
   }
   html {
     scroll-behavior: auto;

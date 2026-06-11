@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
+import { RowSkeleton } from "@/components/ui/Skeleton";
 import { useUser, useAuthHydrated } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
 import { getConversations, type ChatConvo } from "@/lib/data";
@@ -47,9 +48,9 @@ export function ChatList() {
       <h1 style={{ fontSize: "clamp(26px,3.4vw,38px)" }}>{t("ch.title")}</h1>
 
       {loading ? (
-        <div style={{ display: "grid", gap: 2, marginTop: 24 }}>
-          {[0, 1].map((i) => (
-            <div key={i} style={{ height: 76, background: "var(--paper-2)", borderRadius: 12 }} />
+        <div style={{ marginTop: 22, display: "flex", flexDirection: "column" }}>
+          {[0, 1, 2].map((i) => (
+            <RowSkeleton key={i} />
           ))}
         </div>
       ) : convos.length === 0 ? (

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
 import { ListingCard } from "@/components/listing/ListingCard";
+import { ListingGridSkeleton } from "@/components/ui/Skeleton";
 import { BROWSE_CATEGORIES } from "@/lib/listings";
 import { createClient } from "@/lib/supabase/client";
 import { getActiveListings } from "@/lib/data";
@@ -279,23 +280,7 @@ export function BrowseClient() {
 
         {/* grid */}
         {loading ? (
-          <div
-            className="eb-listing-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4,1fr)",
-              gap: 22,
-              margin: "26px 0 80px",
-            }}
-          >
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="card"
-                style={{ height: 248, background: "var(--paper-2)", border: "1px solid var(--line)" }}
-              />
-            ))}
-          </div>
+          <ListingGridSkeleton count={8} />
         ) : results.length === 0 ? (
           <div style={{ textAlign: "center", padding: "70px 0" }}>
             <p style={{ color: "var(--ink-soft)", fontSize: 16 }}>{t("bp.empty")}</p>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useT } from "@/components/providers/LanguageProvider";
 import { Icon } from "@/components/brand/Icon";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { rs } from "@/lib/format";
 import { useUser, useAuthHydrated } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
@@ -87,7 +88,7 @@ export function ChatThread({ chatId }: { chatId: string }) {
     );
   }
 
-  if (!loaded || !user) return null;
+  if (!loaded || !user) return <ThreadSkeleton />;
 
   if (!convo) {
     return (
@@ -252,6 +253,54 @@ export function ChatThread({ chatId }: { chatId: string }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function ThreadSkeleton() {
+  const bubbles: { me: boolean; w: string }[] = [
+    { me: false, w: "58%" },
+    { me: true, w: "44%" },
+    { me: false, w: "70%" },
+    { me: true, w: "36%" },
+    { me: false, w: "52%" },
+  ];
+  return (
+    <div className="wrap" style={{ padding: "18px 28px 28px", maxWidth: 760 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, paddingBottom: 14 }}>
+        <Skeleton w={20} h={20} r={6} style={{ flex: "0 0 auto" }} />
+        <Skeleton w={40} h={40} r={999} style={{ flex: "0 0 auto" }} />
+        <div style={{ flex: 1, display: "grid", gap: 8 }}>
+          <Skeleton w="38%" h={15} />
+          <Skeleton w="22%" h={12} />
+        </div>
+      </div>
+      <div
+        className="card"
+        style={{
+          height: "min(58vh, 520px)",
+          padding: "18px 16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          background: "var(--paper-2)",
+        }}
+      >
+        {bubbles.map((b, i) => (
+          <Skeleton
+            key={i}
+            w={b.w}
+            h={42}
+            r={16}
+            style={{ alignSelf: b.me ? "flex-end" : "flex-start", background: "var(--paper-3)" }}
+          />
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
+        <Skeleton w={96} h={42} r={999} style={{ flex: "0 0 auto" }} />
+        <Skeleton h={42} r={12} />
+        <Skeleton w={52} h={42} r={12} style={{ flex: "0 0 auto" }} />
+      </div>
     </div>
   );
 }
