@@ -228,7 +228,7 @@ export const STRINGS = {
 
   // ---- header / account ----
   "nav.home": { en: "Home", ne: "गृह" },
-  "nav.login": { en: "Log in", ne: "लग इन" },
+  "nav.login": { en: "Log in / Sign up", ne: "लग इन / साइन अप" },
   "nav.logout": { en: "Log out", ne: "लग आउट" },
   "nav.account": { en: "Account", ne: "खाता" },
   "nav.purchases": { en: "My purchases", ne: "मेरा खरिद" },
@@ -352,9 +352,14 @@ export const STRINGS = {
 
   // ---- auth ----
   "au.welcome": { en: "Welcome to EverestBazar", ne: "एभरेस्टबजारमा स्वागत छ" },
+  "au.eyebrow": { en: "Log in or sign up", ne: "लग इन वा साइन अप" },
   "au.loginSub": {
-    en: "Sign in to buy or sell. Enter your email and we'll send a one-time code.",
-    ne: "किन्न वा बेच्न लग इन गर्नुहोस्। इमेल लेख्नुहोस्, हामी एक-पटके कोड पठाउँछौं।",
+    en: "Log in or create your account to buy or sell. Enter your email and we'll send a one-time code.",
+    ne: "किन्न वा बेच्न लग इन गर्नुहोस् वा खाता बनाउनुहोस्। इमेल लेख्नुहोस्, हामी एक-पटके कोड पठाउँछौं।",
+  },
+  "au.newAccount": {
+    en: "New to EverestBazar? Just enter your email — we'll create your account automatically. No password to remember.",
+    ne: "एभरेस्टबजारमा नयाँ? इमेल लेख्नुहोस् — हामी स्वतः तपाईंको खाता बनाउँछौं। पासवर्ड सम्झनु पर्दैन।",
   },
   "au.emailLabel": { en: "Email", ne: "इमेल" },
   "au.emailPh": { en: "you@example.com", ne: "you@example.com" },
@@ -414,8 +419,8 @@ export const STRINGS = {
   // ---- sell gate / create listing ----
   "sg.title": { en: "Sell on EverestBazar", ne: "एभरेस्टबजारमा बेच्नुहोस्" },
   "sg.needLogin": {
-    en: "Sign in to start selling. It takes a minute.",
-    ne: "बेच्न सुरु गर्न लग इन गर्नुहोस्। एक मिनेट लाग्छ।",
+    en: "Create a free account or log in to start selling. It takes a minute.",
+    ne: "बेच्न सुरु गर्न निःशुल्क खाता बनाउनुहोस् वा लग इन गर्नुहोस्। एक मिनेट लाग्छ।",
   },
   "sg.needKyc": {
     en: "One more step: verify your identity to start listing.",

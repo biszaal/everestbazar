@@ -31,6 +31,7 @@ export function Logo({
     >
       <SummitMark fill={mark} snow={snow} size={markSize ?? Math.round(size * 1.5)} />
       <span
+        className="eb-logo-word"
         style={{
           fontFamily: "var(--display)",
           fontWeight: 800,

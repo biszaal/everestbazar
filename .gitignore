@@ -31,3 +31,6 @@ yarn-error.log*
 
 # playwright mcp debug artifacts
 /.playwright-mcp/
+
+# Local Netlify folder
+.netlify

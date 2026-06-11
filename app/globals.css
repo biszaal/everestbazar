@@ -424,12 +424,21 @@ svg {
   .eb-mobilenav {
     display: grid;
   }
-  .eb-login-btn {
+  /* bottom tab bar already has Sell — drop the redundant header CTA on mobile
+     so the Log in / Sign up button stays visible */
+  .eb-header-sell {
     display: none !important;
   }
   /* clear the fixed bottom tab bar */
   .eb-app {
     padding-bottom: 64px;
+  }
+}
+/* very narrow phones: show only the Summit mark in the header so the
+   "Log in / Sign up" button never gets clipped (footer keeps the wordmark) */
+@media (max-width: 480px) {
+  .eb-site-header .eb-logo-word {
+    display: none;
   }
 }
 .eb-foot-grid .pf-line {

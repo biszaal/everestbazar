@@ -31,7 +31,7 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header style={{ position: "sticky", top: 0, zIndex: 50 }}>
+    <header className="eb-site-header" style={{ position: "sticky", top: 0, zIndex: 50 }}>
       <PrayerLine height={3} />
       <div
         style={{
@@ -96,7 +96,7 @@ function AuthArea() {
   if (hydrated && user) {
     return (
       <>
-        <Link href="/sell" className="btn btn-primary btn-sm eb-sell-btn">
+        <Link href="/sell" className="btn btn-primary btn-sm eb-header-sell">
           {t("nav.sellCta")}
         </Link>
         <AccountMenu />
@@ -113,7 +113,7 @@ function AuthArea() {
       >
         {t("nav.login")}
       </Link>
-      <Link href="/sell" className="btn btn-primary btn-sm">
+      <Link href="/sell" className="btn btn-primary btn-sm eb-header-sell">
         {t("nav.sellCta")}
       </Link>
     </>

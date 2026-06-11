@@ -43,9 +43,28 @@ export default function LoginPage() {
 
   return (
     <div className="card" style={{ padding: "34px 30px", borderRadius: 22 }}>
-      <span className="eyebrow">{t("sell.eyebrow")}</span>
+      <span className="eyebrow">{t("au.eyebrow")}</span>
       <h1 style={{ fontSize: 28, marginTop: 14 }}>{t("au.welcome")}</h1>
       <p style={{ color: "var(--ink-2)", marginTop: 10, fontSize: 15.5 }}>{t("au.loginSub")}</p>
+
+      <p
+        style={{
+          display: "flex",
+          gap: 9,
+          alignItems: "flex-start",
+          marginTop: 16,
+          padding: "11px 13px",
+          background: "var(--paper-2)",
+          border: "1px solid var(--line)",
+          borderRadius: 12,
+          fontSize: 13.5,
+          color: "var(--ink-2)",
+          lineHeight: 1.5,
+        }}
+      >
+        <Icon name="shield" size={16} sw={1.9} stroke="var(--green)" />
+        <span>{t("au.newAccount")}</span>
+      </p>
 
       <label style={{ display: "block", marginTop: 24 }}>
         <span
