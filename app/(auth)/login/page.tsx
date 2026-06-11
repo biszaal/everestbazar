@@ -105,7 +105,7 @@ export default function LoginPage() {
         disabled={sending}
         style={{ width: "100%", marginTop: 18, opacity: sending ? 0.7 : 1 }}
       >
-        {sending ? t("co.processing") : t("au.sendOtp")}
+        {sending ? t("au.sending") : t("au.sendOtp")}
         {!sending && <Icon name="arrow" size={18} sw={2.2} />}
       </button>
 

@@ -360,7 +360,7 @@ export function CreateListingClient() {
         disabled={publishing}
         style={{ width: "100%", marginTop: 22, opacity: publishing ? 0.7 : 1 }}
       >
-        {publishing ? t("co.processing") : t("new.publish")}
+        {publishing ? t("new.publishing") : t("new.publish")}
         {!publishing && <Icon name="check" size={18} sw={2.4} />}
       </button>
     </div>

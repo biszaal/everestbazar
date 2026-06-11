@@ -365,6 +365,7 @@ export const STRINGS = {
   "au.emailPh": { en: "you@example.com", ne: "you@example.com" },
   "au.errEmail": { en: "Enter a valid email address.", ne: "मान्य इमेल ठेगाना लेख्नुहोस्।" },
   "au.sendOtp": { en: "Send code", ne: "कोड पठाउनुहोस्" },
+  "au.sending": { en: "Sending code…", ne: "कोड पठाउँदै…" },
   "au.terms": {
     en: "By continuing you agree to our Terms of Service.",
     ne: "जारी राख्दा तपाईं हाम्रा सेवाका सर्तहरूमा सहमत हुनुहुन्छ।",
@@ -413,6 +414,7 @@ export const STRINGS = {
     ne: "सामान्यतया कार्यालय समयमा २–४ घण्टा लाग्छ। पर्खंदा किनमेल गर्न सक्नुहुन्छ।",
   },
   "kyc.goBrowse": { en: "Go to browse", ne: "किनमेलमा जानुहोस्" },
+  "kyc.checking": { en: "Checking…", ne: "जाँच गर्दै…" },
   "kyc.demoApprove": { en: "Simulate approval (demo)", ne: "स्वीकृति नक्कल गर्नुहोस् (डेमो)" },
   "kyc.step": { en: "Step", ne: "चरण" },
 
@@ -449,6 +451,7 @@ export const STRINGS = {
   },
   "new.youReceive": { en: "You receive after 5% fee", ne: "५% शुल्कपछि तपाईंले पाउने" },
   "new.publish": { en: "Publish listing", ne: "सूची प्रकाशित गर्नुहोस्" },
+  "new.publishing": { en: "Publishing…", ne: "प्रकाशित गर्दै…" },
   "new.published": { en: "Listing published!", ne: "सूची प्रकाशित भयो!" },
   "new.minPhotos": { en: "Please add at least 3 photos.", ne: "कृपया कम्तीमा ३ फोटो थप्नुहोस्।" },
   "new.needTitle": { en: "Give your listing a title.", ne: "सूचीलाई शीर्षक दिनुहोस्।" },

@@ -87,7 +87,7 @@ export default function KycPendingPage() {
           </button>
         ) : (
           <button type="button" className="btn btn-primary" onClick={checkStatus} disabled={checking}>
-            {checking ? t("co.processing") : t("kyc.goBrowse")} <Icon name="arrow" size={18} sw={2.2} />
+            {checking ? t("kyc.checking") : t("kyc.goBrowse")} <Icon name="arrow" size={18} sw={2.2} />
           </button>
         )}
       </div>
