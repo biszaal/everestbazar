@@ -19,14 +19,22 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const next = safeNext(searchParams.get("next"));
 
+  // Behind Netlify's proxy, request.url carries an internal host. Redirect to
+  // the public host the browser actually used, so we stay on the same origin
+  // the session cookie was set for (otherwise the user lands logged-out on the
+  // wrong domain).
+  const fwdHost = request.headers.get("x-forwarded-host");
+  const fwdProto = request.headers.get("x-forwarded-proto") ?? "https";
+  const base = fwdHost ? `${fwdProto}://${fwdHost}` : origin;
+
   if (code) {
     const supabase = createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${base}${next}`);
     }
   }
 
   // expired/used link, or opened in a different browser (no PKCE verifier)
-  return NextResponse.redirect(`${origin}/login?error=link`);
+  return NextResponse.redirect(`${base}/login?error=link`);
 }
