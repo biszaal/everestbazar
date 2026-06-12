@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
 import { createClient } from "@/lib/supabase/client";
+import { useUser } from "@/store/authStore";
 import { Icon } from "@/components/brand/Icon";
 
 export default function VerifyPage() {
   const { t } = useT();
   const router = useRouter();
+  const user = useUser();
 
   const [email, setEmail] = useState<string | null>(null);
   const [seconds, setSeconds] = useState(30);
@@ -20,6 +22,16 @@ export default function VerifyPage() {
     if (!e) router.replace("/login");
     else setEmail(e);
   }, [router]);
+
+  // if the link is opened in another tab of the same browser, the session
+  // broadcasts here — advance this tab to the page they came from too.
+  useEffect(() => {
+    if (!user) return;
+    const redirect = sessionStorage.getItem("eb-redirect") || "/browse";
+    sessionStorage.removeItem("eb-email");
+    sessionStorage.removeItem("eb-redirect");
+    router.replace(redirect);
+  }, [user, router]);
 
   useEffect(() => {
     if (seconds <= 0) return;
