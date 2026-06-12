@@ -1,11 +1,39 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * Hosts we are willing to redirect back to. The redirect base is NEVER taken
+ * from an unvalidated request header (open-redirect guard): x-forwarded-host is
+ * only honored when it's one of ours, otherwise we fall back to the request's
+ * own origin. The protocol is derived locally, never trusted from a header.
+ */
+const ALLOWED_HOSTS = new Set([
+  "everestbazar.com",
+  "www.everestbazar.com",
+  "localhost:3000",
+  "localhost:3100",
+]);
+
 /** Only allow same-origin relative paths — never an absolute/protocol-relative
- *  URL (open-redirect guard). */
+ *  URL (open-redirect guard on the destination path). */
 function safeNext(next: string | null): string {
   if (!next || !next.startsWith("/") || next.startsWith("//")) return "/browse";
   return next;
+}
+
+/**
+ * Behind Netlify's proxy, request.url carries an internal host, so the public
+ * host arrives in x-forwarded-host. We honor it only if it's allow-listed —
+ * a forged header falls through to the request's own (already-ours) origin.
+ */
+function redirectBase(request: Request): string {
+  const { origin } = new URL(request.url);
+  const fwdHost = request.headers.get("x-forwarded-host")?.toLowerCase();
+  if (fwdHost && ALLOWED_HOSTS.has(fwdHost)) {
+    const proto = fwdHost.startsWith("localhost") ? "http" : "https";
+    return `${proto}://${fwdHost}`;
+  }
+  return origin;
 }
 
 /**
@@ -15,17 +43,10 @@ function safeNext(next: string | null): string {
  * the cookie set when the link was requested.
  */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const next = safeNext(searchParams.get("next"));
-
-  // Behind Netlify's proxy, request.url carries an internal host. Redirect to
-  // the public host the browser actually used, so we stay on the same origin
-  // the session cookie was set for (otherwise the user lands logged-out on the
-  // wrong domain).
-  const fwdHost = request.headers.get("x-forwarded-host");
-  const fwdProto = request.headers.get("x-forwarded-proto") ?? "https";
-  const base = fwdHost ? `${fwdProto}://${fwdHost}` : origin;
+  const base = redirectBase(request);
 
   if (code) {
     const supabase = createClient();
