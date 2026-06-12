@@ -13,11 +13,14 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
 
-  // remember where to return after auth (e.g. /listing/new, /checkout/[id])
+  // remember where to return after auth (e.g. /listing/new, /checkout/[id]);
+  // surface a failed/expired magic link bounced back here
   useEffect(() => {
-    const redirect = new URLSearchParams(window.location.search).get("redirect");
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get("redirect");
     if (redirect) sessionStorage.setItem("eb-redirect", redirect);
-  }, []);
+    if (params.get("error") === "link") setError(t("au.linkErr"));
+  }, [t]);
 
   const submit = async () => {
     const value = email.trim().toLowerCase();
@@ -27,10 +30,15 @@ export default function LoginPage() {
     }
     setError("");
     setSending(true);
+    const redirect =
+      sessionStorage.getItem("eb-redirect") ||
+      new URLSearchParams(window.location.search).get("redirect") ||
+      "/browse";
+    const emailRedirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirect)}`;
     const supabase = createClient();
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email: value,
-      options: { shouldCreateUser: true },
+      options: { shouldCreateUser: true, emailRedirectTo },
     });
     setSending(false);
     if (otpError) {

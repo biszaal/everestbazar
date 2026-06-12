@@ -14,7 +14,8 @@ export type IconName =
   | "coin"
   | "upload"
   | "star"
-  | "phone";
+  | "phone"
+  | "mail";
 
 interface IconProps {
   name: IconName;
@@ -96,6 +97,12 @@ export function Icon({
       <>
         <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
         <path d="M10.5 18.5h3" />
+      </>
+    ),
+    mail: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3.5 7.5 8.5 6 8.5-6" />
       </>
     ),
   };

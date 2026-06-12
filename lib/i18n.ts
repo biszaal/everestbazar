@@ -354,8 +354,8 @@ export const STRINGS = {
   "au.welcome": { en: "Welcome to EverestBazar", ne: "एभरेस्टबजारमा स्वागत छ" },
   "au.eyebrow": { en: "Log in or sign up", ne: "लग इन वा साइन अप" },
   "au.loginSub": {
-    en: "Log in or create your account to buy or sell. Enter your email and we'll send a one-time code.",
-    ne: "किन्न वा बेच्न लग इन गर्नुहोस् वा खाता बनाउनुहोस्। इमेल लेख्नुहोस्, हामी एक-पटके कोड पठाउँछौं।",
+    en: "Log in or create your account to buy or sell. Enter your email and we'll send you a secure sign-in link.",
+    ne: "किन्न वा बेच्न लग इन गर्नुहोस् वा खाता बनाउनुहोस्। इमेल लेख्नुहोस्, हामी सुरक्षित साइन-इन लिंक पठाउँछौं।",
   },
   "au.newAccount": {
     en: "New to EverestBazar? Just enter your email — we'll create your account automatically. No password to remember.",
@@ -364,8 +364,8 @@ export const STRINGS = {
   "au.emailLabel": { en: "Email", ne: "इमेल" },
   "au.emailPh": { en: "you@example.com", ne: "you@example.com" },
   "au.errEmail": { en: "Enter a valid email address.", ne: "मान्य इमेल ठेगाना लेख्नुहोस्।" },
-  "au.sendOtp": { en: "Send code", ne: "कोड पठाउनुहोस्" },
-  "au.sending": { en: "Sending code…", ne: "कोड पठाउँदै…" },
+  "au.sendOtp": { en: "Email me a link", ne: "मलाई लिंक इमेल गर्नुहोस्" },
+  "au.sending": { en: "Sending link…", ne: "लिंक पठाउँदै…" },
   "au.terms": {
     en: "By continuing you agree to our Terms of Service.",
     ne: "जारी राख्दा तपाईं हाम्रा सेवाका सर्तहरूमा सहमत हुनुहुन्छ।",
@@ -378,6 +378,18 @@ export const STRINGS = {
   "au.verify": { en: "Verify", ne: "प्रमाणित गर्नुहोस्" },
   "au.otpErr": { en: "That code isn't right — try again.", ne: "कोड मिलेन — फेरि प्रयास गर्नुहोस्।" },
   "au.changeNumber": { en: "Use a different email", ne: "अर्को इमेल प्रयोग गर्नुहोस्" },
+  "au.checkTitle": { en: "Check your email", ne: "आफ्नो इमेल हेर्नुहोस्" },
+  "au.checkSub": { en: "We sent a sign-in link to", ne: "हामीले साइन-इन लिंक पठायौं" },
+  "au.checkHint": {
+    en: "Open it on this device to finish — the link brings you right back here. It expires soon.",
+    ne: "यही यन्त्रमा खोल्नुहोस् — लिंकले तपाईंलाई यहीँ फर्काउँछ। यो चाँडै समाप्त हुन्छ।",
+  },
+  "au.resendLink": { en: "Resend link", ne: "लिंक पुनः पठाउनुहोस्" },
+  "au.linkResent": { en: "Link sent", ne: "लिंक पठाइयो" },
+  "au.linkErr": {
+    en: "That link didn't work or expired. Enter your email for a fresh one.",
+    ne: "त्यो लिंकले काम गरेन वा समाप्त भयो। नयाँको लागि इमेल लेख्नुहोस्।",
+  },
 
   // ---- kyc ----
   "kyc.uploadTitle": { en: "Verify your identity", ne: "आफ्नो परिचय प्रमाणित गर्नुहोस्" },

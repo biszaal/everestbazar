@@ -3,19 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/providers/LanguageProvider";
-import { useAuthStore } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
-import { OTPInput } from "@/components/ui/OTPInput";
+import { Icon } from "@/components/brand/Icon";
 
 export default function VerifyPage() {
   const { t } = useT();
   const router = useRouter();
 
   const [email, setEmail] = useState<string | null>(null);
-  const [code, setCode] = useState("");
-  const [error, setError] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [seconds, setSeconds] = useState(45);
+  const [seconds, setSeconds] = useState(30);
+  const [resent, setResent] = useState(false);
 
   // guard: must have an email from the login step
   useEffect(() => {
@@ -30,96 +27,74 @@ export default function VerifyPage() {
     return () => clearInterval(id);
   }, [seconds]);
 
-  const handleComplete = async (value: string) => {
-    if (!email || verifying) return;
-    setVerifying(true);
-    const supabase = createClient();
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email,
-      token: value,
-      type: "email",
-    });
-    if (verifyError) {
-      setVerifying(false);
-      setError(true);
-      setTimeout(() => {
-        setError(false);
-        setCode("");
-      }, 500);
-      return;
-    }
-    // session is set; pull the fresh profile, then route by KYC
-    await useAuthStore.getState().refresh();
-    sessionStorage.removeItem("eb-email");
-    const kyc = useAuthStore.getState().user?.kycStatus;
-    const redirect = sessionStorage.getItem("eb-redirect");
-    if (kyc === "VERIFIED") {
-      sessionStorage.removeItem("eb-redirect");
-      router.push(redirect || "/browse");
-    } else {
-      router.push("/kyc/upload");
-    }
-  };
-
   const resend = async () => {
     if (!email) return;
-    const supabase = createClient();
-    await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
-    setSeconds(45);
-    setCode("");
+    const redirect = sessionStorage.getItem("eb-redirect") || "/browse";
+    const emailRedirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirect)}`;
+    await createClient().auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: true, emailRedirectTo },
+    });
+    setSeconds(30);
+    setResent(true);
+    setTimeout(() => setResent(false), 2500);
   };
 
   if (!email) return null;
 
   return (
-    <div className="card" style={{ padding: "34px 30px", borderRadius: 22 }}>
-      <h1 style={{ fontSize: 26 }}>{t("au.otpTitle")}</h1>
-      <p style={{ color: "var(--ink-2)", marginTop: 8, fontSize: 15 }}>
-        {t("au.otpSub")}{" "}
-        <strong style={{ fontFamily: "var(--mono)", fontWeight: 600 }}>{email}</strong>
-      </p>
-
-      <div style={{ marginTop: 24 }}>
-        <OTPInput
-          value={code}
-          onChange={setCode}
-          onComplete={handleComplete}
-          error={error}
-          disabled={verifying}
-          length={8}
-        />
-      </div>
-
-      {error && (
-        <p role="alert" style={{ color: "var(--crimson)", fontSize: 13, marginTop: 12, textAlign: "center" }}>
-          {t("au.otpErr")}
-        </p>
-      )}
-
-      <p
+    <div className="card" style={{ padding: "38px 30px", borderRadius: 22, textAlign: "center" }}>
+      <div
+        className="eb-pop"
         style={{
-          marginTop: 16,
-          textAlign: "center",
-          fontSize: 12.5,
-          color: "var(--ink-soft)",
+          width: 76,
+          height: 76,
+          borderRadius: 999,
+          margin: "0 auto 22px",
+          display: "grid",
+          placeItems: "center",
+          background: "color-mix(in oklab, var(--crimson) 12%, var(--paper))",
         }}
       >
-        {t("au.otpHint")}
+        <Icon name="mail" size={34} sw={1.8} stroke="var(--crimson)" />
+      </div>
+
+      <h1 style={{ fontSize: 26 }}>{t("au.checkTitle")}</h1>
+      <p style={{ color: "var(--ink-2)", marginTop: 10, fontSize: 15.5, lineHeight: 1.6 }}>
+        {t("au.checkSub")}{" "}
+        <strong style={{ fontFamily: "var(--mono)", fontWeight: 600, color: "var(--ink)" }}>
+          {email}
+        </strong>
+      </p>
+      <p style={{ color: "var(--ink-soft)", marginTop: 14, fontSize: 13.5, lineHeight: 1.55 }}>
+        {t("au.checkHint")}
       </p>
 
-      <div style={{ marginTop: 18, textAlign: "center" }}>
-        {seconds > 0 ? (
+      <div style={{ marginTop: 22, minHeight: 24 }}>
+        {resent ? (
+          <span
+            style={{
+              fontSize: 14,
+              color: "var(--green)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <Icon name="check" size={15} sw={2.6} stroke="var(--green)" /> {t("au.linkResent")}
+          </span>
+        ) : seconds > 0 ? (
           <span style={{ fontSize: 14, color: "var(--ink-soft)" }}>
             {t("au.resendIn")} {seconds}s
           </span>
         ) : (
           <button type="button" className="btn btn-ghost btn-sm" onClick={resend}>
-            {t("au.resend")}
+            {t("au.resendLink")}
           </button>
         )}
       </div>
 
-      <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--line)", textAlign: "center" }}>
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid var(--line)" }}>
         <button
           type="button"
           onClick={() => router.push("/login")}
