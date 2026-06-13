@@ -139,6 +139,17 @@ export const STRINGS = {
   "cat.mobile": { en: "Mobiles", ne: "मोबाइल" },
   "cat.home": { en: "Home", ne: "घरायसी" },
   "cat.fashion": { en: "Fashion", ne: "फेसन" },
+  "cat.shop": { en: "Shop by category", ne: "श्रेणी अनुसार किनमेल" },
+  "mh.eyebrow": { en: "Nepal's verified marketplace", ne: "नेपालको प्रमाणित मार्केटप्लेस" },
+  "mh.title": { en: "Buy and sell secondhand, safely", ne: "सेकेन्डह्यान्ड किनबेच, सुरक्षित रूपमा" },
+  "mh.sub": {
+    en: "Every seller is ID-verified and every payment is held in escrow until you confirm delivery.",
+    ne: "हरेक बिक्रेता परिचय-प्रमाणित छन् र हरेक भुक्तानी डेलिभरी पुष्टि नभएसम्म एस्क्रोमा सुरक्षित राखिन्छ।",
+  },
+  "mh.cta": { en: "Browse listings", ne: "सूचीहरू हेर्नुहोस्" },
+  "mh.chipVerified": { en: "Verified sellers", ne: "प्रमाणित बिक्रेता" },
+  "mh.chipEscrow": { en: "Escrow-protected", ne: "एस्क्रो-संरक्षित" },
+  "mh.chipCity": { en: "Kathmandu", ne: "काठमाडौं" },
 
   // ---- seller form ----
   "sell.eyebrow": { en: "Become a seller", ne: "बिक्रेता बन्नुहोस्" },

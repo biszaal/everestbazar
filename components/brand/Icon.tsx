@@ -15,7 +15,16 @@ export type IconName =
   | "upload"
   | "star"
   | "phone"
-  | "mail";
+  | "mail"
+  | "monitor"
+  | "car"
+  | "sofa"
+  | "house"
+  | "shirt"
+  | "cart"
+  | "heart"
+  | "tag"
+  | "truck";
 
 interface IconProps {
   name: IconName;
@@ -103,6 +112,60 @@ export function Icon({
       <>
         <rect x="3" y="5" width="18" height="14" rx="2" />
         <path d="m3.5 7.5 8.5 6 8.5-6" />
+      </>
+    ),
+    monitor: (
+      <>
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M9 21h6M12 17v4" />
+      </>
+    ),
+    car: (
+      <>
+        <path d="M5 11l1.7-4.3A2 2 0 0 1 8.6 5.4h6.8a2 2 0 0 1 1.9 1.3L19 11" />
+        <path d="M3 11h18v4.5a1 1 0 0 1-1 1h-1M5 16.5H4a1 1 0 0 1-1-1V11" />
+        <circle cx="7.5" cy="16.5" r="1.6" />
+        <circle cx="16.5" cy="16.5" r="1.6" />
+      </>
+    ),
+    sofa: (
+      <>
+        <path d="M5 11V8.5A2.5 2.5 0 0 1 7.5 6h9A2.5 2.5 0 0 1 19 8.5V11" />
+        <rect x="3" y="11" width="18" height="5.5" rx="2" />
+        <path d="M6.5 16.5v2M17.5 16.5v2" />
+      </>
+    ),
+    house: (
+      <>
+        <path d="M4 11.5 12 4l8 7.5" />
+        <path d="M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9" />
+      </>
+    ),
+    shirt: (
+      <path d="M8.5 4 5 6.5 7 9l1.5-1.1V20h7V7.9L17 9l2-2.5L15.5 4a3.5 3.5 0 0 1-7 0z" />
+    ),
+    cart: (
+      <>
+        <circle cx="9" cy="20" r="1.4" />
+        <circle cx="17" cy="20" r="1.4" />
+        <path d="M3 4h2.2l2 11.2a1 1 0 0 0 1 .8h7.6a1 1 0 0 0 1-.8L20 7.5H6.2" />
+      </>
+    ),
+    heart: (
+      <path d="M12 20S4.5 15.5 4.5 9.9A3.8 3.8 0 0 1 12 7a3.8 3.8 0 0 1 7.5 2.9C19.5 15.5 12 20 12 20z" />
+    ),
+    tag: (
+      <>
+        <path d="M3.5 12.6V4.6a1 1 0 0 1 1-1h8l8 8-9 9-8-8z" />
+        <circle cx="8" cy="8" r="1.3" />
+      </>
+    ),
+    truck: (
+      <>
+        <path d="M3 6.5h11v9H3z" />
+        <path d="M14 9.5h3.6L21 13v2.5h-7z" />
+        <circle cx="7" cy="17.5" r="1.4" />
+        <circle cx="17" cy="17.5" r="1.4" />
       </>
     ),
   };

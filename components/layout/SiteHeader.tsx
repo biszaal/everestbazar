@@ -8,23 +8,18 @@ import { Logo } from "@/components/brand/Logo";
 import { PrayerLine } from "@/components/brand/PrayerLine";
 import { Icon } from "@/components/brand/Icon";
 import { LangToggle } from "@/components/layout/LangToggle";
+import { SearchBar } from "@/components/layout/SearchBar";
 import { useAuthStore, useAuthHydrated, useUser } from "@/store/authStore";
 import { isAdmin } from "@/lib/admin";
+import { BROWSE_CATEGORIES } from "@/lib/listings";
 import type { StringKey } from "@/lib/i18n";
-
-const LINKS: [string, StringKey][] = [
-  ["/browse", "nav.browse"],
-  ["/#how", "nav.how"],
-  ["/sell", "nav.sell"],
-];
 
 export function SiteHeader() {
   const { t } = useT();
-  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -35,54 +30,39 @@ export function SiteHeader() {
       <PrayerLine height={3} />
       <div
         style={{
-          background: scrolled ? "rgba(246,240,230,0.86)" : "var(--paper)",
-          backdropFilter: scrolled ? "saturate(150%) blur(12px)" : "none",
-          WebkitBackdropFilter: scrolled ? "saturate(150%) blur(12px)" : "none",
-          borderBottom: "1px solid",
-          borderColor: scrolled ? "var(--line)" : "transparent",
-          transition: "background .25s, border-color .25s",
+          background: "var(--surface)",
+          borderBottom: "1px solid var(--line)",
+          boxShadow: scrolled ? "0 1px 0 var(--line), 0 6px 20px rgba(33,27,22,0.05)" : "none",
+          transition: "box-shadow .25s",
         }}
       >
-        <div
-          className="wrap"
-          style={{ height: 70, display: "flex", alignItems: "center", gap: 24 }}
-        >
-          <Logo size={23} markSize={32} href="/" />
-          <nav
-            className="eb-navlinks"
-            style={{ display: "flex", gap: 26, marginLeft: 18 }}
-          >
-            {LINKS.map(([href, key]) => {
-              const active = href.startsWith("/") && !href.includes("#") && pathname === href;
-              return (
-                <Link
-                  key={key}
-                  href={href}
-                  className="eb-navlink"
-                  aria-current={active ? "page" : undefined}
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: active ? "var(--crimson)" : "var(--ink-2)",
-                  }}
-                >
-                  {t(key)}
-                </Link>
-              );
-            })}
-          </nav>
-          <div
-            style={{
-              marginLeft: "auto",
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-            }}
-          >
+        {/* main row: logo · search · actions */}
+        <div className="wrap eb-head-main">
+          <Logo size={22} markSize={30} href="/" />
+          <SearchBar className="eb-head-search" />
+          <div className="eb-head-actions">
             <LangToggle />
             <AuthArea />
           </div>
         </div>
+
+        {/* category strip */}
+        <nav className="eb-cats" aria-label={t("nav.browse")}>
+          <div className="wrap eb-cats-row">
+            {BROWSE_CATEGORIES.map((c) => (
+              <Link
+                key={c}
+                href={c === "all" ? "/browse" : `/browse?cat=${c}`}
+                className="eb-cat"
+              >
+                {c === "all" ? t("browse.all") : t(`cat.${c}` as StringKey)}
+              </Link>
+            ))}
+            <Link href="/#how" className="eb-cat eb-cat-muted">
+              {t("nav.how")}
+            </Link>
+          </div>
+        </nav>
       </div>
     </header>
   );
@@ -104,13 +84,9 @@ function AuthArea() {
     );
   }
 
-  // server + pre-hydration default (and logged-out): Log in + Sell
   return (
     <>
-      <Link
-        href="/login"
-        className="btn btn-ghost btn-sm eb-login-btn"
-      >
+      <Link href="/login" className="btn btn-ghost btn-sm eb-login-btn">
         {t("nav.login")}
       </Link>
       <Link href="/sell" className="btn btn-primary btn-sm eb-header-sell">
@@ -176,12 +152,12 @@ function AccountMenu() {
               height: 14,
               borderRadius: 999,
               background: "var(--green)",
-              border: "2px solid var(--paper)",
+              border: "2px solid var(--surface)",
               display: "grid",
               placeItems: "center",
             }}
           >
-            <Icon name="check" size={8} sw={3.4} stroke="var(--paper)" />
+            <Icon name="check" size={8} sw={3.4} stroke="#fff" />
           </span>
         )}
       </button>
@@ -193,7 +169,7 @@ function AccountMenu() {
             right: 0,
             top: 48,
             width: 220,
-            background: "var(--paper)",
+            background: "var(--surface)",
             border: "1px solid var(--line)",
             borderRadius: 14,
             boxShadow: "var(--shadow-lg)",

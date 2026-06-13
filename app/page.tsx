@@ -1,20 +1,20 @@
 import { AppFrame } from "@/components/layout/AppFrame";
-import { Hero } from "@/components/home/Hero";
-import { StatBand } from "@/components/home/StatBand";
+import { MarketHero } from "@/components/home/MarketHero";
+import { CategoryTiles } from "@/components/home/CategoryTiles";
+import { Browse } from "@/components/home/Browse";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { EscrowDemo } from "@/components/home/EscrowDemo";
-import { Browse } from "@/components/home/Browse";
 import { SellerForm } from "@/components/home/SellerForm";
 import { AppCTA } from "@/components/home/AppCTA";
 
 export default function HomePage() {
   return (
     <AppFrame>
-      <Hero />
-      <StatBand />
+      <MarketHero />
+      <CategoryTiles />
+      <Browse />
       <HowItWorks />
       <EscrowDemo />
-      <Browse />
       <SellerForm />
       <AppCTA />
     </AppFrame>

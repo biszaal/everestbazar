@@ -6,15 +6,16 @@
    --font-bricolage, --font-hanken, --font-plex-mono, --font-noto-devanagari
    ============================================================ */
 :root {
-  /* surfaces + ink */
-  --paper: #f6f0e6;
-  --paper-2: #efe7d6;
-  --paper-3: #e7dcc6;
+  /* surfaces + ink — crisp warm-neutral marketplace */
+  --paper: #f7f6f3; /* page canvas */
+  --surface: #ffffff; /* cards, header, inputs, product tiles */
+  --paper-2: #f1efea; /* alt sections / chips / track fills */
+  --paper-3: #e9e6df; /* sunken / skeleton base / avatar wells */
   --ink: #211b16;
-  --ink-2: #3a312a;
-  --ink-soft: #6a5e52;
-  --line: rgba(33, 27, 22, 0.12);
-  --line-2: rgba(33, 27, 22, 0.2);
+  --ink-2: #4a423b;
+  --ink-soft: #857b70;
+  --line: rgba(33, 27, 22, 0.09);
+  --line-2: rgba(33, 27, 22, 0.16);
 
   /* brand + accents */
   --crimson: #be3a2b;
@@ -38,16 +39,17 @@
   --devanagari: var(--font-noto-devanagari), system-ui, sans-serif;
 
   /* geometry */
-  --maxw: 1200px;
-  --r: 14px;
-  --r-lg: 22px;
-  --shadow: 0 1px 2px rgba(33, 27, 22, 0.06), 0 8px 30px rgba(33, 27, 22, 0.08);
-  --shadow-lg: 0 2px 6px rgba(33, 27, 22, 0.08), 0 24px 60px rgba(33, 27, 22, 0.16);
+  --maxw: 1280px;
+  --r: 12px;
+  --r-lg: 16px;
+  --shadow: 0 1px 2px rgba(33, 27, 22, 0.04), 0 4px 16px rgba(33, 27, 22, 0.06);
+  --shadow-lg: 0 2px 8px rgba(33, 27, 22, 0.07), 0 18px 44px rgba(33, 27, 22, 0.12);
 }
 
 /* ---- map semantic tokens into Tailwind's theme (utilities + opacity) ---- */
 @theme inline {
   --color-paper: var(--paper);
+  --color-surface: var(--surface);
   --color-paper-2: var(--paper-2);
   --color-paper-3: var(--paper-3);
   --color-ink: var(--ink);
@@ -87,8 +89,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
-  font-size: 17px;
-  line-height: 1.55;
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -151,10 +153,104 @@ svg {
   padding: 0 28px;
 }
 .section {
-  padding: 96px 0;
+  padding: 64px 0;
 }
 .section-tight {
-  padding: 64px 0;
+  padding: 44px 0;
+}
+
+/* ============================================================
+   marketplace header — logo · search · actions, + category strip
+   ============================================================ */
+.eb-head-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 66px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+.eb-head-search {
+  flex: 1 1 auto;
+  max-width: 600px;
+}
+.eb-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.eb-cats {
+  border-top: 1px solid var(--line);
+}
+.eb-cats-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 46px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.eb-cats-row::-webkit-scrollbar {
+  display: none;
+}
+.eb-cat {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 8px;
+  transition: background 0.14s, color 0.14s;
+}
+.eb-cat:hover {
+  color: var(--crimson);
+  background: var(--paper-2);
+}
+.eb-cat-muted {
+  color: var(--ink-soft);
+  margin-left: auto;
+}
+@media (max-width: 860px) {
+  .eb-head-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .eb-cat-muted {
+    display: none;
+  }
+}
+
+/* category tiles (home) */
+.eb-cat-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+.eb-cat-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.eb-cat-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+@media (max-width: 860px) {
+  .eb-cat-tiles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .eb-cat-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* eyebrow / mono label */
@@ -204,12 +300,11 @@ svg {
 }
 .btn-primary {
   background: var(--crimson);
-  color: var(--paper);
-  box-shadow: 0 6px 18px rgba(190, 58, 43, 0.28);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(33, 27, 22, 0.12);
 }
 .btn-primary:hover {
   background: var(--crimson-d);
-  box-shadow: 0 10px 26px rgba(190, 58, 43, 0.34);
 }
 .btn-ghost {
   background: transparent;
@@ -264,10 +359,22 @@ svg {
 }
 
 .card {
-  background: var(--paper);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
+}
+
+/* product tile — lift on hover */
+.eb-listing {
+  border-radius: 14px;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  will-change: transform;
+}
+.eb-listing:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--line-2);
 }
 
 /* inputs */
@@ -276,7 +383,7 @@ svg {
   padding: 13px 14px;
   border-radius: 12px;
   border: 1px solid var(--line-2);
-  background: var(--paper);
+  background: var(--surface);
   font-family: var(--body);
   font-size: 15.5px;
   color: var(--ink);
