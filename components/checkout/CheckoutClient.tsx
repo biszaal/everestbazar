@@ -197,8 +197,8 @@ export function CheckoutClient({ listing }: { listing: UiListing }) {
           <section className="card" style={{ padding: "18px 20px" }}>
             <h2 style={{ fontSize: 17 }}>{t("co.delivery")}</h2>
             <div style={{ display: "grid", gap: 10, marginTop: 12 }}>
-              <RadioRow selected title={t("co.meet")} note={t("co.meetNote")} />
-              <RadioRow disabled title={t("co.pathao")} badge={t("co.soon")} />
+              <RadioRow selected icon="shield" title={t("co.meet")} note={t("co.meetNote")} />
+              <RadioRow disabled icon="truck" title={t("co.pathao")} badge={t("co.soon")} />
             </div>
           </section>
 
@@ -307,12 +307,14 @@ function RadioRow({
   badge,
   selected,
   disabled,
+  icon,
 }: {
   title: string;
   note?: string;
   badge?: string;
   selected?: boolean;
   disabled?: boolean;
+  icon?: IconName;
 }) {
   return (
     <div
@@ -324,7 +326,7 @@ function RadioRow({
         borderRadius: 12,
         border: "1.5px solid",
         borderColor: selected ? "var(--crimson)" : "var(--line-2)",
-        background: selected ? "color-mix(in oklab, var(--crimson) 5%, var(--paper))" : "var(--paper)",
+        background: selected ? "color-mix(in oklab, var(--crimson) 5%, var(--surface))" : "var(--surface)",
         opacity: disabled ? 0.55 : 1,
       }}
     >
@@ -344,6 +346,9 @@ function RadioRow({
           <span style={{ width: 9, height: 9, borderRadius: 999, background: "var(--crimson)" }} />
         )}
       </span>
+      {icon && (
+        <Icon name={icon} size={20} sw={1.9} stroke={selected ? "var(--crimson)" : "var(--ink-soft)"} />
+      )}
       <div style={{ flex: 1 }}>
         <div style={{ fontWeight: 600, fontSize: 14.5 }}>{title}</div>
         {note && <div style={{ fontSize: 12.5, color: "var(--ink-soft)", marginTop: 2 }}>{note}</div>}
@@ -391,7 +396,7 @@ function PayCard({
         borderRadius: 12,
         border: "1.5px solid",
         borderColor: selected ? "var(--crimson)" : "var(--line-2)",
-        background: selected ? "color-mix(in oklab, var(--crimson) 5%, var(--paper))" : "var(--paper)",
+        background: selected ? "color-mix(in oklab, var(--crimson) 5%, var(--surface))" : "var(--surface)",
         transition: "all .15s",
       }}
     >
@@ -409,8 +414,8 @@ function Spinner() {
         width: 16,
         height: 16,
         borderRadius: 999,
-        border: "2px solid rgba(246,240,230,0.4)",
-        borderTopColor: "var(--paper)",
+        border: "2px solid rgba(255,255,255,0.45)",
+        borderTopColor: "#fff",
         display: "inline-block",
       }}
     />

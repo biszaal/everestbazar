@@ -689,7 +689,7 @@ svg {
 }
 .eb-checkout-summary {
   position: sticky;
-  top: 90px;
+  top: 124px;
 }
 @media (max-width: 860px) {
   .eb-detail-grid {
