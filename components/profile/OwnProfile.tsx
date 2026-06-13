@@ -7,11 +7,13 @@ import { Icon } from "@/components/brand/Icon";
 import { TrustScore } from "@/components/user/TrustScore";
 import { EscrowStatus } from "@/components/checkout/EscrowStatus";
 import { ReviewItem } from "@/components/user/Review";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { Skeleton, ListingGridSkeleton } from "@/components/ui/Skeleton";
+import { ListingCard } from "@/components/listing/ListingCard";
 import { useAuthStore, useAuthHydrated, useUser } from "@/store/authStore";
 import { createClient } from "@/lib/supabase/client";
-import { getMyTransactions, type MyTxn } from "@/lib/data";
+import { getMyTransactions, getSellerListings, type MyTxn } from "@/lib/data";
 import { reviewsFor } from "@/lib/reviews";
+import type { UiListing } from "@/lib/adapters";
 import type { StringKey } from "@/lib/i18n";
 
 type Tab = "listings" | "purchases" | "sales" | "reviews";
@@ -26,6 +28,8 @@ export function OwnProfile() {
   const [editing, setEditing] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [txns, setTxns] = useState<MyTxn[]>([]);
+  const [listings, setListings] = useState<UiListing[]>([]);
+  const [listingsLoaded, setListingsLoaded] = useState(false);
 
   const loadTxns = useCallback(() => {
     if (!user) return;
@@ -34,9 +38,20 @@ export function OwnProfile() {
       .catch(() => setTxns([]));
   }, [user]);
 
+  const loadListings = useCallback(() => {
+    if (!user) return;
+    getSellerListings(createClient(), user.id)
+      .then(setListings)
+      .catch(() => setListings([]))
+      .finally(() => setListingsLoaded(true));
+  }, [user]);
+
   useEffect(() => {
-    if (authHydrated && user) loadTxns();
-  }, [authHydrated, user, loadTxns]);
+    if (authHydrated && user) {
+      loadTxns();
+      loadListings();
+    }
+  }, [authHydrated, user, loadTxns, loadListings]);
 
   if (!authHydrated) return <ProfileSkeleton />;
 
@@ -191,14 +206,26 @@ export function OwnProfile() {
       </div>
 
       <div style={{ marginTop: 24 }}>
-        {tab === "listings" && (
-          <div style={{ textAlign: "center", padding: "44px 0" }}>
-            <p style={{ color: "var(--ink-soft)", fontSize: 16 }}>{t("pf.noListings")}</p>
-            <Link href="/listing/new" className="btn btn-primary" style={{ marginTop: 16 }}>
-              {t("pf.newListing")} <Icon name="arrow" size={18} sw={2.2} />
-            </Link>
-          </div>
-        )}
+        {tab === "listings" &&
+          (!listingsLoaded ? (
+            <ListingGridSkeleton count={4} style={{ margin: 0 }} />
+          ) : listings.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "44px 0" }}>
+              <p style={{ color: "var(--ink-soft)", fontSize: 16 }}>{t("pf.noListings")}</p>
+              <Link href="/listing/new" className="btn btn-primary" style={{ marginTop: 16 }}>
+                {t("pf.newListing")} <Icon name="arrow" size={18} sw={2.2} />
+              </Link>
+            </div>
+          ) : (
+            <div
+              className="eb-listing-grid"
+              style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 20 }}
+            >
+              {listings.map((it) => (
+                <ListingCard key={it.id} it={it} condition={it.condition} />
+              ))}
+            </div>
+          ))}
 
         {tab === "purchases" && (
           <TxnList list={buyerTxns} empty={t("dash.empty")} onChanged={loadTxns} />
